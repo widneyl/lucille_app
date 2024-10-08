@@ -7,3 +7,4 @@
 - **Automatic Deductions**: The advance amounts are deducted from the employee's salary at the end of the month.
 - **Employee Management**: Create new employee profiles, view details, and edit information.
 
+## Instalações NPM
