@@ -7,3 +7,11 @@
 - **Automatic Deductions**: The advance amounts are deducted from the employee's salary at the end of the month.
 - **Employee Management**: Create new employee profiles, view details, and edit information.
 
+## Npm installs
+
+### Icons and Itens (Library)
+
+```bash
+npm install --save react-native-vector-icons
+```
+- usei essa biblioteca no componente de CardFuncionario
