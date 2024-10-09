@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function Profile() {
+export default function Faturamento() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Profile</Text>
+      <Text style={styles.text}>Faturamento</Text>
     </View>
   );
 }
