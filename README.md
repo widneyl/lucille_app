@@ -15,3 +15,5 @@
 npm install --save react-native-vector-icons
 ```
 - usei essa biblioteca no componente de CardFuncionario
+
+- teste tatiely
