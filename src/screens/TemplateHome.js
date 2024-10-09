@@ -1,47 +1,87 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View, Button, TextInput, RefreshControl } from 'react-native';
 import EmployeeCard from '../components/employeeCard';
+import { useEffect, useState } from 'react';
+
+import * as SQLite from 'expo-sqlite';
+import useDatabaseConfig from '../database/useDatabaseConfig';
 
 // criei essa rota só pra poder visualizar os componentes que estava criando
-export default function TemplateHome() {
+export default function TemplateHome() {  
+  const [ name, setName ] = useState('');
+  const [ cargo, setCargo ] = useState('');
+  const [ funShow, setFunShow ] = useState([]);
+  
+  const database = useDatabaseConfig();
+
+  useEffect(() => {
+    async function getAll() {
+      const db = await SQLite.openDatabaseAsync('testdb');
+
+      const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
+      setFunShow([]);
+      let newArray = [];
+      for (const row of allRows) {
+ 
+        // objeto para guardar funcionario
+        const empolyee = {
+        id: row.id,
+        name: row.name,
+        cargo: row.cargo
+        };
+
+        newArray.push(empolyee);
+        // console.log(empolyee); // Debug para checar o objeto individual
+      }
+      setFunShow(newArray);
+    }
+
+    console.log('funciona logo porra')
+    getAll();
+    
+  },[])
+
   return (
     // container de fora, equivalente ao container de toda area Home
     <View style={styles.container}> 
-      {/* text so pra auxiliar */}
-      <Text>Aqui ficarao os cards (template)</Text>
-
       {/* coloquei todos os cards num scrollview, achei mais fácil, mas pode mudar depois */}
       <ScrollView style={styles.scroller}
         showsVerticalScrollIndicator={false}
       >
         {/* criei uma view dentro do scroll para ajustar os cards, sem essa view estavam ficando estourados e desalinhados */}
         <View style={styles.internView}>
-          <EmployeeCard nome={"Julia Colares"} cargo={"Garçonete"}/>
 
-          <EmployeeCard nome={"Roberto Silva"} cargo={"Garçom"}/>
+          {
+            funShow.map((e) => (
+              <EmployeeCard key={e.id} nome={e.name} cargo={e.cargo}/>
+            ))
+          }
+          
+        </View>
 
-          <EmployeeCard nome={"Ana Lucia"} cargo={"Cozinheira"}/>
+        <View style={styles.formView}>
+          <TextInput
+            style={styles.inputView} 
+            placeholder='Nome'
+            onChangeText={setName}
+          />
+          <TextInput
+            style={styles.inputView} 
+            placeholder='Cargo'
+            onChangeText={setCargo}
+          />
 
-          <EmployeeCard nome={"Cristiano Ronaldo"} cargo={"Barman"}/>
+          <Button 
+            title={'Adicionar novo'}
+            onPress={() => {
+              database.create(name, cargo);
+            }}
+          />
 
-          <EmployeeCard nome={"Carlos Albuquerque"} cargo={"Segurança"}/>
-
-          <EmployeeCard nome={"Maria Fernanda"} cargo={"Recepcionista"}/>
-
-          <EmployeeCard nome={"Felipe Costa"} cargo={"Chef de Cozinha"}/>
-
-          <EmployeeCard nome={"Juliana Moreira"} cargo={"Auxiliar de Limpeza"}/>
-
-          <EmployeeCard nome={"Paulo Henrique"} cargo={"Gerente"}/>
-
-          <EmployeeCard nome={"Isabella Lima"} cargo={"Atendente"}/>
-
-          <EmployeeCard nome={"Lucas Andrade"} cargo={"Auxiliar de Cozinha"}/>
-
-          <EmployeeCard nome={"Beatriz Souza"} cargo={"Supervisora"}/>
-
-          <EmployeeCard nome={"Fernando Oliveira"} cargo={"Caixa"}/>
-
-          <EmployeeCard nome={"Larissa Santos"} cargo={"Hostess"}/>
+          <Button title={'Remover por nome'}
+            onPress={() => {
+              database.removeByName(name);
+            }}
+          />
         </View>
       </ScrollView>
 
@@ -70,5 +110,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignContent: 'center',
+  },
+  formView: {
+    borderWidth: 2,
+    gap: 10,
+    padding: 10
+  },
+  inputView: {
+    borderWidth: 1,
+    height: 50,
+    width: '100%',
+    borderRadius: 10,
+    padding: 10
   }
 });

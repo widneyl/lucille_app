@@ -15,3 +15,8 @@
 npm install --save react-native-vector-icons
 ```
 - usei essa biblioteca no componente de CardFuncionario
+
+```bash
+npx expo install expo-sqlite
+```
+- biblioteca para SQLite com expo no projeto
