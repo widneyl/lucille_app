@@ -43,6 +43,8 @@ export default function TemplateHome() {
   return (
     // container de fora, equivalente ao container de toda area Home
     <View style={styles.container}> 
+  
+
       {/* coloquei todos os cards num scrollview, achei mais fácil, mas pode mudar depois */}
       <ScrollView style={styles.scroller}
         showsVerticalScrollIndicator={false}
@@ -98,12 +100,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignContent: 'center',
-    padding: 50,
+
+    //Diminui o padding da esquerda e direita de 50 pra 30, para que os cards fiquem mais largos
+    paddingLeft: 30,
+    paddingRight: 30,
+    //Padding top de 10 para ficar mais proximo dos icones de perfil e da logo
+    paddingTop: 10,
+
+    //Aumentei o padding de Bottom para que o ultimo carde fique completamente visivel
+    paddingBottom: 60
   },
   scroller: {
     width: '100%',
     // backgroundColor: 'red',
-    padding: 10,
+
+    //Diminui o padding de 10 pra 8
+    padding: 8,
   },
   internView: {
     display: 'flex',
