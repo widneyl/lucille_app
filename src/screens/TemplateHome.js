@@ -1,44 +1,72 @@
-import { ScrollView, StyleSheet, View, Button, TextInput, RefreshControl } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import EmployeeCard from '../components/employeeCard';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import * as SQLite from 'expo-sqlite';
-import useDatabaseConfig from '../database/useDatabaseConfig';
+import { useFocusEffect } from '@react-navigation/native';
 
 // criei essa rota só pra poder visualizar os componentes que estava criando
 export default function TemplateHome() {  
-  const [ name, setName ] = useState('');
-  const [ cargo, setCargo ] = useState('');
   const [ funShow, setFunShow ] = useState([]);
-  
-  const database = useDatabaseConfig();
 
-  useEffect(() => {
-    async function getAll() {
-      const db = await SQLite.openDatabaseAsync('testdb');
+  // a funão getAll vai ficar fora do useEffect, pois vai ser chamada em um useFocusEffect agora
+  const getAll = async () => {
+    const db = await SQLite.openDatabaseAsync('newtests');
 
-      const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
-      setFunShow([]);
-      let newArray = [];
-      for (const row of allRows) {
- 
-        // objeto para guardar funcionario
-        const empolyee = {
+    const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
+
+    setFunShow([]);
+    let newArray = [];
+    for (const row of allRows) {
+      
+      // objeto para guardar funcionario
+      const employee = {
         id: row.id,
         name: row.name,
-        cargo: row.cargo
-        };
+        cargo: row.cargo,
+        salario: row.salario,
+      };
 
-        newArray.push(empolyee);
-        // console.log(empolyee); // Debug para checar o objeto individual
-      }
-      setFunShow(newArray);
+      newArray.push(employee);
+      // console.log(empolyee); // debug para checar o objeto individual
     }
+    setFunShow(newArray);
+  };
 
-    console.log('funciona logo porra')
-    getAll();
+  // toda vez que o templateHome estiver em focus vai chamar um callBack que chama a função getAll()
+  useFocusEffect(
+    useCallback(() => {
+      getAll(); // chamando o getAll() pra atualizar os funcionarios exibidos
+    }, [])
+  );
+
+  // useEffect(() => {
+  //   async function getAll() {
+  //     const db = await SQLite.openDatabaseAsync('newtests');
+
+  //     const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
+  //     setFunShow([]);
+  //     let newArray = [];
+  //     for (const row of allRows) {
+ 
+  //       // objeto para guardar funcionario
+  //       const empolyee = {
+  //         id: row.id,
+  //         name: row.name,
+  //         cargo: row.cargo,
+  //         salario: row.salario,
+  //       };
+
+  //       newArray.push(empolyee);
+  //       // console.log(empolyee); // Debug para checar o objeto individual
+  //     }
+  //     setFunShow(newArray);
+  //   }
+
+  //   console.log('funciona logo porra')
+  //   getAll();
     
-  },[])
+  // },[])
 
   return (
     // container de fora, equivalente ao container de toda area Home
@@ -60,31 +88,6 @@ export default function TemplateHome() {
           
         </View>
 
-        <View style={styles.formView}>
-          <TextInput
-            style={styles.inputView} 
-            placeholder='Nome'
-            onChangeText={setName}
-          />
-          <TextInput
-            style={styles.inputView} 
-            placeholder='Cargo'
-            onChangeText={setCargo}
-          />
-
-          <Button 
-            title={'Adicionar novo'}
-            onPress={() => {
-              database.create(name, cargo);
-            }}
-          />
-
-          <Button title={'Remover por nome'}
-            onPress={() => {
-              database.removeByName(name);
-            }}
-          />
-        </View>
       </ScrollView>
 
     </View>

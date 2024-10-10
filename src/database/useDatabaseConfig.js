@@ -5,19 +5,20 @@ export default function useDatabaseConfig() {
     const [ funcionarios, setFuncionarios ] = useState([]);
 
     // para criar um funcionario
-    async function create(name, cargo) {
-        const db = await SQLite.openDatabaseAsync('testdb');
+    async function create(name, cargo, salario) {
+        const db = await SQLite.openDatabaseAsync('newtests');
 
         // caso for a primeira vez que o usuario entrar no aplicativo, essa query vai precisar rodar pra criar a tabela
         await db.execAsync(`
             PRAGMA journal_mode = WAL;
-            CREATE TABLE IF NOT EXISTS funcionarios (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, cargo TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS funcionarios (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, cargo TEXT NOT NULL, salario INTEGER NOT NULL);
         `);
 
         await db.runAsync(
-            'INSERT INTO funcionarios (name, cargo) VALUES (?, ?)',
+            'INSERT INTO funcionarios (name, cargo, salario) VALUES (?, ?, ?)',
             name,
-            cargo
+            cargo,
+            salario
         );
         
         // pra debug
@@ -27,18 +28,19 @@ export default function useDatabaseConfig() {
     
     // atribuindo todos funcionários no array
     async function getAll() {
-        const db = await SQLite.openDatabaseAsync('testdb');
+        const db = await SQLite.openDatabaseAsync('newtests');
 
         const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
         setFuncionarios([]);
         let newArray = [];
         for (const row of allRows) {
             
-            // objeto para guardar funcionario
+            // objeto para guardar funcionario, agora com o salario no objeto funcionario
             const empolyee = {
                 id: row.id,
                 name: row.name,
-                cargo: row.cargo
+                cargo: row.cargo,
+                salario: row.salario,
             };
 
             newArray.push(empolyee);
@@ -50,7 +52,7 @@ export default function useDatabaseConfig() {
     
     // metodo pra remover pelo nome
     async function removeByName(nome){
-        const db = await SQLite.openDatabaseAsync('testdb');
+        const db = await SQLite.openDatabaseAsync('newtests');
 
         await db.runAsync(
           'DELETE FROM funcionarios WHERE name = $name', { 
@@ -72,7 +74,7 @@ export default function useDatabaseConfig() {
 
     // metodo pra remover pelo nome
     async function removeById(id){
-        const db = await SQLite.openDatabaseAsync('testdb');
+        const db = await SQLite.openDatabaseAsync('newtests');
 
         await db.runAsync(
           'DELETE FROM funcionarios WHERE id = $id', { 
