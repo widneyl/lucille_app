@@ -1,12 +1,22 @@
 import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import Logo from '../components/logo/Logo';
 import ProfileImage from '../img/profileIconEdit.png'
+import { useState } from 'react';
+import useDatabaseConfig from '../database/useDatabaseConfig';
+import { useNavigation } from '@react-navigation/native';
 
 
 
 
 export default function Profile() {
+  const [ name, setName ] = useState('');
+  const [ cargo, setCargo ] = useState('');
+  const [ salario, setSalario ] = useState(0);
 
+  const navigation = useNavigation();
+
+  // criando uma instância das configurações do banco de dados
+  const database = useDatabaseConfig();
 
   return (
     <View style={styles.container}>
@@ -34,6 +44,7 @@ export default function Profile() {
               <TextInput
                 style={styles.input}
                 placeholder={''}
+                onChangeText={setName}
               />
             </View>
           </TouchableOpacity>
@@ -48,6 +59,7 @@ export default function Profile() {
           <View style={styles.form}>
             <TextInput
               style={styles.input}
+              onChangeText={setCargo}
             />
           </View>
           <Text style={styles.text}>Salario</Text>
@@ -55,6 +67,7 @@ export default function Profile() {
             <TextInput
               style={styles.input}
               keyboardType='numeric'
+              onChangeText={setSalario}
             />
           </View>
 
@@ -71,7 +84,12 @@ export default function Profile() {
             </View>
 
             <View style={styles.boxBotao}>
-              <TouchableOpacity style={styles.botao}>
+              <TouchableOpacity style={styles.botao}
+                onPress={() => {
+                  database.create(name, cargo, salario);
+                  navigation.navigate('Home');
+                }}
+              >
                 <Text style={styles.textbotao}>Contratar</Text>
               </TouchableOpacity>
             </View>
