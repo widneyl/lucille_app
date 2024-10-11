@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import Logo from '../components/logo/Logo';
 import ProfileIcon from '../components/profileIcon/ProfileIcon';
 
-import TemplateHome from './TemplateHome'
+import ViewEmployeeCards from '../components/viewEmployeeCards';
 
 export default function Home() {
   return (
@@ -23,7 +23,10 @@ export default function Home() {
 
       </View>
       {/*Implementando o componente com os cards a tela de home */}
-      <TemplateHome />
+      {/* <TemplateHome /> */}
+      
+      {/* transformei o templateHome em um componente para manter a organização do código */}
+      <ViewEmployeeCards />
     </View>
   );
 }

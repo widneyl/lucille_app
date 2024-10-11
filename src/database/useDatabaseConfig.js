@@ -25,6 +25,24 @@ export default function useDatabaseConfig() {
         console.log(name + ' - cadastrado com sucesso');
 
     }
+
+    // atualizando os campos do funcinoário, útil para quando for implementar a tela de editar um funcionário
+    // testei e ta funcionando bem
+    async function updateAllFields(name, cargo, salario, id) {
+        const db = await SQLite.openDatabaseAsync('newtests');
+
+        // query para fazer atualizações de um funcionário
+        await db.runAsync(
+            'UPDATE funcionarios SET name = ?, cargo = ?, salario = ? WHERE id = ?', 
+            name,
+            cargo,
+            salario,
+            id
+        );
+                
+        // pra debug
+        console.log(name + ' - atualizado com sucesso')
+    }
     
     // atribuindo todos funcionários no array
     async function getAll() {
@@ -85,5 +103,5 @@ export default function useDatabaseConfig() {
         console.log(id + ' - removido com sucesso');
     }
 
-    return { create, getAll, removeByName, removeById, funcionarios }
+    return { create, getAll, removeByName, removeById, updateAllFields, funcionarios }
 }
