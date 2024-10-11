@@ -1,12 +1,12 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
-import EmployeeCard from '../components/employeeCard';
-import { useCallback, useEffect, useState } from 'react';
+import EmployeeCard from '../employeeCard';
+import { useCallback, useState } from 'react';
 
 import * as SQLite from 'expo-sqlite';
 import { useFocusEffect } from '@react-navigation/native';
 
 // criei essa rota só pra poder visualizar os componentes que estava criando
-export default function TemplateHome() {  
+export default function ViewEmployeeCards() {  
   const [ funShow, setFunShow ] = useState([]);
 
   // a funão getAll vai ficar fora do useEffect, pois vai ser chamada em um useFocusEffect agora
@@ -36,37 +36,10 @@ export default function TemplateHome() {
   // toda vez que o templateHome estiver em focus vai chamar um callBack que chama a função getAll()
   useFocusEffect(
     useCallback(() => {
-      getAll(); // chamando o getAll() pra atualizar os funcionarios exibidos
+        console.log('to aqui');
+        getAll(); // chamando o getAll() pra atualizar os funcionarios exibidos
     }, [])
   );
-
-  // useEffect(() => {
-  //   async function getAll() {
-  //     const db = await SQLite.openDatabaseAsync('newtests');
-
-  //     const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
-  //     setFunShow([]);
-  //     let newArray = [];
-  //     for (const row of allRows) {
- 
-  //       // objeto para guardar funcionario
-  //       const empolyee = {
-  //         id: row.id,
-  //         name: row.name,
-  //         cargo: row.cargo,
-  //         salario: row.salario,
-  //       };
-
-  //       newArray.push(empolyee);
-  //       // console.log(empolyee); // Debug para checar o objeto individual
-  //     }
-  //     setFunShow(newArray);
-  //   }
-
-  //   console.log('funciona logo porra')
-  //   getAll();
-    
-  // },[])
 
   return (
     // container de fora, equivalente ao container de toda area Home
