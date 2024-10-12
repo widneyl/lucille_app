@@ -20,16 +20,16 @@ export class Funcionario {
         return this.salario;
     }
 
-    setId(){
+    setId(id){
         this.id = id;
     }
-    setNome(){
+    setNome(nome){
         this.nome = nome;
     }
-    setCargo(){
+    setCargo(cargo){
         this.cargo = cargo;
     }
-    setSalario(){
+    setSalario(salario){
         this.salario = salario;
     }
 
