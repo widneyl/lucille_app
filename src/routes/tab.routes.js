@@ -6,6 +6,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 import Home from '../screens/Home'
 import RegisterFunc from '../screens/RegisterFunc'
+import Debug from "../screens/debugArea";
 
 const Tab = createBottomTabNavigator();
 
@@ -48,6 +49,16 @@ export default function TabRoutes() {
                 component={RegisterFunc}
                 options={{
                     tabBarIcon: ( {size} ) => <FontAwesome6 name="arrow-trend-up" color={'#45791E'} size={size}/>,
+                    tabBarLabel: '',
+                }}
+            />
+
+            {/* tela temporaria para testes */}
+            <Tab.Screen
+                name="DebugArea"
+                component={Debug}
+                options={{
+                    tabBarIcon: ( {size} ) => <FontAwesome6 name="vial" color={'red'} size={size}/>,
                     tabBarLabel: '',
                 }}
             />

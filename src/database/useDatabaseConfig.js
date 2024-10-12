@@ -106,6 +106,8 @@ export default function useDatabaseConfig() {
     }
 
     // procurando pelo funcionário pelo nome e retornando um objeto com seus atributos
+    // às vezes funciona bem, às vezes não
+    //  o método tem um delay de funcionamento, às vezes quando chama a primeira vez o objeto pode retornar undefined devido o delay do banco de dados, ou as vezes nao reconhece os gets e sets
     function findById(id) {
         // chamando o gelAll para atualizar o array de funcionarios
         getAll();
@@ -113,7 +115,7 @@ export default function useDatabaseConfig() {
         let objetoFuncionario;
     
         // com o array contendo todos os funcionários, agora é procurar pelo funcionário que corresponda
-        funcionarios.find((f) => {
+        funcionarios.forEach((f) => {
             if (f.id == id) {
                 objetoFuncionario = new Funcionario(f.id, f.nome, f.cargo, f.salario);
             }
@@ -123,13 +125,34 @@ export default function useDatabaseConfig() {
         return objetoFuncionario;
     }
 
+    // procurando e retornando o funcionário diretamento do banco de dados
+    async function findById_WithDB(id) {
+        const db = await SQLite.openDatabaseAsync('newtests');
+        let result;
+        
+        return new Promise(async function (resolve, reject) {
+            result = await db.getFirstAsync(`SELECT * FROM funcionarios WHERE id = ${id}`);
+            console.log('resultado: ' + result);
+            
+            resolve(result)
+        })
+
+        // promiseResult
+        // .then((funcionario) => {
+        //     console.log('resposta de fora: ' + funcionario.name)
+        //     // return new Funcionario(funcionario.id, funcionario.name, funcionario.cargo, funcionario.salario)
+        // })
+
+    }
+
     return { 
         create, 
         getAll, 
         removeByName, 
         removeById, 
         updateAllFields, 
-        findById, 
+        findById,
+        findById_WithDB,
         funcionarios 
     }
 }
