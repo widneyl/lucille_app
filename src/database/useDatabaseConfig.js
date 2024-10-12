@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import { useState } from 'react';
+import { Funcionario } from '../entity/Funcionario';
 
 export default function useDatabaseConfig() {
     const [ funcionarios, setFuncionarios ] = useState([]);
@@ -54,14 +55,15 @@ export default function useDatabaseConfig() {
         for (const row of allRows) {
             
             // objeto para guardar funcionario, agora com o salario no objeto funcionario
-            const empolyee = {
-                id: row.id,
-                name: row.name,
-                cargo: row.cargo,
-                salario: row.salario,
-            };
+            // const empolyee = {
+            //     id: row.id,
+            //     name: row.name,
+            //     cargo: row.cargo,
+            //     salario: row.salario,
+            // };
 
-            newArray.push(empolyee);
+            // substitui o objeto literal pela classe funcionário para guardar no array
+            newArray.push(new Funcionario(row.id, row.name, row.cargo, row.salario));
             // console.log(empolyee); // Debug para checar o objeto individual
 
         }
@@ -103,5 +105,31 @@ export default function useDatabaseConfig() {
         console.log(id + ' - removido com sucesso');
     }
 
-    return { create, getAll, removeByName, removeById, updateAllFields, funcionarios }
+    // procurando pelo funcionário pelo nome e retornando um objeto com seus atributos
+    function findById(id) {
+        // chamando o gelAll para atualizar o array de funcionarios
+        getAll();
+
+        let objetoFuncionario;
+    
+        // com o array contendo todos os funcionários, agora é procurar pelo funcionário que corresponda
+        funcionarios.find((f) => {
+            if (f.id == id) {
+                objetoFuncionario = new Funcionario(f.id, f.nome, f.cargo, f.salario);
+            }
+        })
+
+        // console.log(objetoFuncionario)
+        return objetoFuncionario;
+    }
+
+    return { 
+        create, 
+        getAll, 
+        removeByName, 
+        removeById, 
+        updateAllFields, 
+        findById, 
+        funcionarios 
+    }
 }
