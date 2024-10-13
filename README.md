@@ -20,3 +20,8 @@ npm install --save react-native-vector-icons
 npx expo install expo-sqlite
 ```
 - biblioteca para SQLite com expo no projeto
+
+```bash
+npm install @react-navigation/stack
+```
+- biblioteca para navegações em pilha
