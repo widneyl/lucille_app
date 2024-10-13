@@ -5,6 +5,7 @@ import useDatabaseConfig from '../database/useDatabaseConfig';
 
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'; 
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import ValeCard from '../components/valeCard';
 
 // essa tela é temporaria, fiz só pra testar a navegação stack e os metodos de atualização e exclusão
 export default function ViewAndEdit( { route } ) {
@@ -16,6 +17,11 @@ export default function ViewAndEdit( { route } ) {
   const [ name, setName ] = useState('');
   const [ cargo, setCargo ] = useState('');
   const [ salario, setSalario ] = useState(0);
+
+  // states para vales
+  const [ vales, setVales ] = useState([])
+  const [ descricao, setDescricao ] = useState('')
+  const [ valor, setValor ] = useState(0)
 
   // state para controle de edição
   const [ edit, setEdit ] = useState(true);
@@ -29,10 +35,29 @@ export default function ViewAndEdit( { route } ) {
       setName(f.name);
       setCargo(f.cargo);
       setSalario((f.salario).toString());
+      setVales(JSON.parse(f.vales));
 
     })
     .catch(err => console.log('deu erro aqui no atualizafunc: ' + err))
   },[])
+
+  // função para adicionar novo vale
+  function adicionarNovoVale() {
+    const vale = {
+      descricao: descricao,
+      valor: Number(valor),
+    }
+
+    let arrayVale = vales;
+    arrayVale.push(vale);
+    setVales(arrayVale);
+
+    console.log(vales);
+
+    let valesStr = JSON.stringify(vales);
+
+    db.updateVale(funcionarioId, valesStr)
+  }
 
   return (
     <View style={styles.container}>
@@ -106,6 +131,53 @@ export default function ViewAndEdit( { route } ) {
                     </TouchableOpacity>
                 </View>
               </View>
+
+              {/* area para visualização dos vales do funcionário */}
+              <View style={styles.valeArea}>
+
+                {/* cards templates para testes
+                // <ValeCard descricao={"Coca-cola"} preco={9.90}/>
+                // <ValeCard descricao={"Emprestimo"} preco={200}/>
+                // <ValeCard descricao={"Espetinho de frango"} preco={11.5}/> */}
+                
+
+                {/* logica para exibição dos cards do funcionário */}
+                {
+                  vales.map((v) => (
+                    <ValeCard key={Math.random()} descricao={v.descricao} preco={v.valor}/>
+                  ))
+                }
+
+                <View style={styles.valeForm}>
+
+                  <Text style={styles.subtitle}>Adicionar novo vale: </Text>
+                
+                  <TextInput
+                    style={styles.input}
+                    placeholder='Descrição'
+                    onChangeText={setDescricao}
+                  />
+                  <TextInput
+                    style={styles.input}
+                    placeholder='Preço'
+                    keyboardType='numeric'
+                    onChangeText={setValor}
+                  />
+                  
+                  <TouchableOpacity style={styles.botao}
+                    onPress={() => {
+                      // console.log(vales[0]);
+                      // console.log(Math.random());
+                      adicionarNovoVale()
+
+                    }}
+                  >
+                    <Text style={styles.textbotao}>Adicionar</Text>
+                  </TouchableOpacity>
+                </View>
+
+              </View>
+
             </ScrollView>
         </KeyboardAvoidingView>
     </View>
@@ -159,5 +231,24 @@ const styles = StyleSheet.create({
   boxBotao:{
     justifyContent: 'flex-end',
     marginBottom: 10
-  }
+  },
+  valeArea: {
+    gap: 1,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  subtitle: {
+    textAlign: 'center',
+    fontSize: 24,
+    marginTop: 10,
+    marginBottom: 10,
+    fontWeight: 'bold',
+    color: 'green'
+  },
+  valeForm: {
+    width: '90%',
+    // backgroundColor: 'blue'
+  },
 });

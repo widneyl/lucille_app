@@ -17,7 +17,7 @@ export default function useDatabaseConfig() {
         `);
 
         // variável temporária para testes de adição de funcionário com vales predefinidos
-        const valeString = '[{"tipo":"Produto","descricao":"Coca-cola 2l","valor":9.99},{"tipo":"Produto","descricao":"Latinha kaut","valor":4.50},{"tipo":"Produto","descricao":"Espetinho","valor":8.90}]';
+        const valeString = '[{"descricao":"Coca-cola 2l","valor":9.99},{"descricao":"Latinha kaut","valor":4.50},{"descricao":"Espetinho","valor":8.90}]';
 
         await db.runAsync(
             'INSERT INTO funcionarios (name, cargo, salario, vales) VALUES (?, ?, ?, ?)',
@@ -48,6 +48,27 @@ export default function useDatabaseConfig() {
                 
         // pra debug
         console.log(name + ' - atualizado com sucesso')
+    }
+
+    // atualizando os vales do funcionário a partir do id
+    async function updateVale(id, vales) {
+        console.log('entrou no update vale')
+        const db = await SQLite.openDatabaseAsync('opentests');
+
+        // criando o statement
+        const statement = await db.prepareAsync(
+            'UPDATE funcionarios SET vales = $vales WHERE id = $id'
+        );
+
+        try {
+            let result = await statement.executeAsync(
+                { $vales: vales, $id: id }
+            );
+            console.log('nova atualização:', result, result.changes);
+            
+        } finally {
+            await statement.finalizeAsync();
+        }
     }
     
     // atribuindo todos funcionários no array
@@ -157,6 +178,7 @@ export default function useDatabaseConfig() {
         removeByName, 
         removeById, 
         updateAllFields, 
+        updateVale, 
         findById,
         findById_WithDB,
         funcionarios 
