@@ -7,19 +7,24 @@ export default function useDatabaseConfig() {
 
     // para criar um funcionario
     async function create(name, cargo, salario) {
-        const db = await SQLite.openDatabaseAsync('newtests');
+        const db = await SQLite.openDatabaseAsync('opentests');
 
         // caso for a primeira vez que o usuario entrar no aplicativo, essa query vai precisar rodar pra criar a tabela
+        // atualização: adição do campo vales na tabela de funcionários
         await db.execAsync(`
             PRAGMA journal_mode = WAL;
-            CREATE TABLE IF NOT EXISTS funcionarios (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, cargo TEXT NOT NULL, salario INTEGER NOT NULL);
+            CREATE TABLE IF NOT EXISTS funcionarios (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, cargo TEXT NOT NULL, salario INTEGER NOT NULL, vales TEXT);
         `);
 
+        // variável temporária para testes de adição de funcionário com vales predefinidos
+        const valeString = '[{"tipo":"Produto","descricao":"Coca-cola 2l","valor":9.99},{"tipo":"Produto","descricao":"Latinha kaut","valor":4.50},{"tipo":"Produto","descricao":"Espetinho","valor":8.90}]';
+
         await db.runAsync(
-            'INSERT INTO funcionarios (name, cargo, salario) VALUES (?, ?, ?)',
+            'INSERT INTO funcionarios (name, cargo, salario, vales) VALUES (?, ?, ?, ?)',
             name,
             cargo,
-            salario
+            salario,
+            valeString
         );
         
         // pra debug
@@ -30,7 +35,7 @@ export default function useDatabaseConfig() {
     // atualizando os campos do funcinoário, útil para quando for implementar a tela de editar um funcionário
     // testei e ta funcionando bem
     async function updateAllFields(name, cargo, salario, id) {
-        const db = await SQLite.openDatabaseAsync('newtests');
+        const db = await SQLite.openDatabaseAsync('opentests');
 
         // query para fazer atualizações de um funcionário
         await db.runAsync(
@@ -47,7 +52,7 @@ export default function useDatabaseConfig() {
     
     // atribuindo todos funcionários no array
     async function getAll() {
-        const db = await SQLite.openDatabaseAsync('newtests');
+        const db = await SQLite.openDatabaseAsync('opentests');
 
         const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
         setFuncionarios([]);
@@ -63,7 +68,8 @@ export default function useDatabaseConfig() {
             // };
 
             // substitui o objeto literal pela classe funcionário para guardar no array
-            newArray.push(new Funcionario(row.id, row.name, row.cargo, row.salario));
+            newArray.push(new Funcionario(row.id, row.name, row.cargo, row.salario, row.vales));
+            // console.log(new Funcionario(row.id, row.name, row.cargo, row.salario, row.vales));
             // console.log(empolyee); // Debug para checar o objeto individual
 
         }
@@ -72,7 +78,7 @@ export default function useDatabaseConfig() {
     
     // metodo pra remover pelo nome
     async function removeByName(nome){
-        const db = await SQLite.openDatabaseAsync('newtests');
+        const db = await SQLite.openDatabaseAsync('opentests');
 
         await db.runAsync(
           'DELETE FROM funcionarios WHERE name = $name', { 
@@ -94,7 +100,7 @@ export default function useDatabaseConfig() {
 
     // metodo pra remover pelo nome
     async function removeById(id){
-        const db = await SQLite.openDatabaseAsync('newtests');
+        const db = await SQLite.openDatabaseAsync('opentests');
 
         await db.runAsync(
           'DELETE FROM funcionarios WHERE id = $id', { 
@@ -117,7 +123,7 @@ export default function useDatabaseConfig() {
         // com o array contendo todos os funcionários, agora é procurar pelo funcionário que corresponda
         funcionarios.forEach((f) => {
             if (f.id == id) {
-                objetoFuncionario = new Funcionario(f.id, f.nome, f.cargo, f.salario);
+                objetoFuncionario = new Funcionario(f.id, f.nome, f.cargo, f.salario, f.vales);
             }
         })
 
@@ -127,7 +133,7 @@ export default function useDatabaseConfig() {
 
     // procurando e retornando o funcionário diretamento do banco de dados
     async function findById_WithDB(id) {
-        const db = await SQLite.openDatabaseAsync('newtests');
+        const db = await SQLite.openDatabaseAsync('opentests');
         let result;
         
         return new Promise(async function (resolve, reject) {

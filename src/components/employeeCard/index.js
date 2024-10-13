@@ -1,14 +1,20 @@
+import { useNavigation } from '@react-navigation/native';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function EmployeeCard( { nome, cargo, img } ) {
+export default function EmployeeCard( { id, nome, cargo, img } ) {
+  const navigate = useNavigation();
+  
   return (
     <View style={styles.cardContainer}>
         {/* todo o card esta em volta de um pressable, o que torna o card pressionavel e apto a fazer ações (como redirecionamento para outras páginas) a partir de qualquer clique */}
         <Pressable
             style={styles.container}
             // função pra testar o clique no componente card
-            onPress={() => console.log('pressionando o componente com nome de ' + nome)}
+            onPress={() => {
+              console.log('pressionando o componente com nome de ' + nome)
+              navigate.navigate('ViewAndEdit', { funcId: id });
+            }}
         >
           {/* container da foto de perfil do funcionario */}
           <View style={styles.imageArea}>

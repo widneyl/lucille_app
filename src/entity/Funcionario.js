@@ -1,9 +1,10 @@
 export class Funcionario {
-    constructor(id, nome, cargo, salario) {
+    constructor(id, nome, cargo, salario, vales) {
         this.id = id;
         this.nome = nome;
         this.cargo = cargo;
         this.salario = salario;
+        this.vales = vales;
     }
 
     // metodos get e set
@@ -18,6 +19,9 @@ export class Funcionario {
     }
     getSalario(){
         return this.salario;
+    }
+    getVales(){
+        return this.vales;
     }
 
     setId(id){
