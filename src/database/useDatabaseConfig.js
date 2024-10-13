@@ -34,20 +34,26 @@ export default function useDatabaseConfig() {
 
     // atualizando os campos do funcinoário, útil para quando for implementar a tela de editar um funcionário
     // testei e ta funcionando bem
+    // -> a execução do método antigo tava entrando em conflito com o updateVale devido a falta de preparo do statement e finalização do mesmo, agora tá funcionando bem ... possivelmente vou ter que fazer uma atualização dos demais métodos e usar o prepareAsync com o finalizeAsync para evitar possíveis erros
     async function updateAllFields(name, cargo, salario, id) {
         const db = await SQLite.openDatabaseAsync('opentests');
 
-        // query para fazer atualizações de um funcionário
-        await db.runAsync(
-            'UPDATE funcionarios SET name = ?, cargo = ?, salario = ? WHERE id = ?', 
-            name,
-            cargo,
-            salario,
-            id
+        console.log('entrou no update allfields')
+
+        // criando o statement
+        const statement = await db.prepareAsync(
+            'UPDATE funcionarios SET name = $name, cargo = $cargo, salario = $salario WHERE id = $id'
         );
-                
-        // pra debug
-        console.log(name + ' - atualizado com sucesso')
+
+        try {
+            let result = await statement.executeAsync(
+                { $name: name, $cargo: cargo, $salario: salario, $id: id }
+            );
+            console.log('nova atualização:', result, result.changes);
+            
+        } finally {
+            await statement.finalizeAsync();
+        }
     }
 
     // atualizando os vales do funcionário a partir do id
