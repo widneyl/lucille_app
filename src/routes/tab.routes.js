@@ -1,18 +1,24 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from '@react-navigation/stack';
 
 //Importação dos icones
 import Octicons from '@expo/vector-icons/Octicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'; 
 
+// importação das telas
 import Home from '../screens/Home'
 import RegisterFunc from '../screens/RegisterFunc'
+import Debug from "../screens/debugArea";
+import ViewAndEdit from "../screens/ViewAndEdit";
 
+// importação dos tipos de navegações
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 
 
 
-export default function TabRoutes() {
+function TabRoutes() {
 
 
     const tabBarStyleOn = { // Para o estilo do tab
@@ -52,6 +58,16 @@ export default function TabRoutes() {
                 }}
             />
 
+            {/* tela temporaria para testes */}
+            <Tab.Screen
+                name="DebugArea"
+                component={Debug}
+                options={{
+                    tabBarIcon: ( {size} ) => <FontAwesome6 name="vial" color={'red'} size={size}/>,
+                    tabBarLabel: '',
+                }}
+            />
+
             {/* criei essa rota pra visualizar a criação dos componentes, ela é uma cópia da home */}
             {/* <Tab.Screen
                 name="Template"
@@ -65,3 +81,22 @@ export default function TabRoutes() {
         </Tab.Navigator>
     )
 }
+
+export default function AllRoutes() {
+    return (
+        <Stack.Navigator>
+          {/* O tab navigator está dentro do stack navigator, assim as navegações em pilha estarão habilitadas */}
+          <Stack.Screen 
+            name="Tabs" 
+            component={TabRoutes} 
+            options={{ headerShown: false }} 
+          />
+
+          {/* primeira rota em pilha, tela temporária para visualizar as informações do funcionário */}
+          <Stack.Screen 
+            name="ViewAndEdit" 
+            component={ViewAndEdit}
+          />  
+        </Stack.Navigator>
+    );
+  }

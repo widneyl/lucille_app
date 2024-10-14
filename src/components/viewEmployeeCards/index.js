@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 
 import * as SQLite from 'expo-sqlite';
 import { useFocusEffect } from '@react-navigation/native';
+import { Funcionario } from '../../entity/Funcionario';
 
 // criei essa rota só pra poder visualizar os componentes que estava criando
 export default function ViewEmployeeCards() {  
@@ -11,7 +12,7 @@ export default function ViewEmployeeCards() {
 
   // a funão getAll vai ficar fora do useEffect, pois vai ser chamada em um useFocusEffect agora
   const getAll = async () => {
-    const db = await SQLite.openDatabaseAsync('newtests');
+    const db = await SQLite.openDatabaseAsync('opentests');
 
     const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
 
@@ -20,14 +21,17 @@ export default function ViewEmployeeCards() {
     for (const row of allRows) {
       
       // objeto para guardar funcionario
-      const employee = {
-        id: row.id,
-        name: row.name,
-        cargo: row.cargo,
-        salario: row.salario,
-      };
+      // const employee = {
+      //   id: row.id,
+      //   name: row.name,
+      //   cargo: row.cargo,
+      //   salario: row.salario,
+      // };
 
-      newArray.push(employee);
+      // newArray.push(employee);
+      
+      // mudei de objeto literal para o objeto funcionario da entidade
+      newArray.push(new Funcionario(row.id, row.name, row.cargo, row.salario))
       // console.log(empolyee); // debug para checar o objeto individual
     }
     setFunShow(newArray);
@@ -55,7 +59,7 @@ export default function ViewEmployeeCards() {
 
           {
             funShow.map((e) => (
-              <EmployeeCard key={e.id} nome={e.name} cargo={e.cargo}/>
+              <EmployeeCard key={e.id} id={e.id} nome={e.nome} cargo={e.cargo}/>
             ))
           }
           
