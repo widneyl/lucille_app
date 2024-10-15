@@ -11,7 +11,7 @@ export default function Logo() {
 
 const styles = StyleSheet.create({
     lucilleStyleLogo: {
-        color: '#45791E',
+        color: '#5ea629',
         fontSize: 40,
         fontWeight: '500'
     }
