@@ -7,7 +7,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 // importação das telas
 import Home from '../screens/Home'
-import RegisterFunc from '../screens/RegisterFunc'
+import Register from '../screens/RegisterNew'
 import Debug from "../screens/debugArea";
 import ViewAndEdit from "../screens/ViewAndEdit";
 
@@ -51,7 +51,7 @@ function TabRoutes() {
 
             <Tab.Screen
                 name="RegisterFunc"
-                component={RegisterFunc}
+                component={Register}
                 options={{
                     tabBarIcon: ( {size} ) => <FontAwesome6 name="arrow-trend-up" color={'#45791E'} size={size}/>,
                     tabBarLabel: '',

@@ -48,9 +48,12 @@ export default function EmployeeCard( { id, nome, cargo, img } ) {
 const styles = StyleSheet.create({
   cardContainer: {
     margin: 8,
-    borderRadius: 5,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 30,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 50,
     width: '100%',
-    backgroundColor: '#448117',
+    backgroundColor: '#5ea629',
   },
   container: {
     display: 'flex',

@@ -1,10 +1,14 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet, Image } from 'react-native'
 import AntDesign from '@expo/vector-icons/AntDesign';
+import profileIcon from '../../img/user2.png'
 
 export default function ProfileIcon() {
     return (
         <View style={styles.boxIcon}>
-            <AntDesign name='user' size={50} color={'green'} style={styles.icon}/>
+            <Image 
+                style={styles.icon}
+                source={profileIcon}
+            ></Image>
         </View>
     )
 }
@@ -12,17 +16,14 @@ export default function ProfileIcon() {
 
 const styles = StyleSheet.create({
     boxIcon: {
-        backgroundColor: '#011126',
-        borderRadius: 100,
         justifyContent: 'center',
         alignContent: 'center',
-        padding: 4
-        
-        
+        padding: 10
     },
-    icon:{
+    icon: {
         alignSelf: 'center',
-        padding: 5
+        width: 65,
+        height: 65,
     }
-    
+
 });
