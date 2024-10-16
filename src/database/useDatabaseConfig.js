@@ -16,15 +16,11 @@ export default function useDatabaseConfig() {
             CREATE TABLE IF NOT EXISTS funcionarios (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, cargo TEXT NOT NULL, salario INTEGER NOT NULL, vales TEXT);
         `);
 
-        // variável temporária para testes de adição de funcionário com vales predefinidos
-        const valeString = '[{"descricao":"Coca-cola 2l","valor":9.99},{"descricao":"Latinha kaut","valor":4.50},{"descricao":"Espetinho","valor":8.90}]';
-
         await db.runAsync(
-            'INSERT INTO funcionarios (name, cargo, salario, vales) VALUES (?, ?, ?, ?)',
+            'INSERT INTO funcionarios (name, cargo, salario) VALUES (?, ?, ?)',
             name,
             cargo,
             salario,
-            valeString
         );
         
         // pra debug
@@ -85,57 +81,51 @@ export default function useDatabaseConfig() {
         setFuncionarios([]);
         let newArray = [];
         for (const row of allRows) {
-            
-            // objeto para guardar funcionario, agora com o salario no objeto funcionario
-            // const empolyee = {
-            //     id: row.id,
-            //     name: row.name,
-            //     cargo: row.cargo,
-            //     salario: row.salario,
-            // };
-
             // substitui o objeto literal pela classe funcionário para guardar no array
             newArray.push(new Funcionario(row.id, row.name, row.cargo, row.salario, row.vales));
-            // console.log(new Funcionario(row.id, row.name, row.cargo, row.salario, row.vales));
-            // console.log(empolyee); // Debug para checar o objeto individual
-
         }
         setFuncionarios(newArray);
     }
     
     // metodo pra remover pelo nome
+    // atualizei a forma que estava executando a query para prevenir erros de async nos metodos abaixo
     async function removeByName(nome){
         const db = await SQLite.openDatabaseAsync('opentests');
 
-        await db.runAsync(
-          'DELETE FROM funcionarios WHERE name = $name', { 
-            $name: nome
-          }
+        const statement = await db.prepareAsync(
+            'DELETE FROM funcionarios WHERE name = $name'
         );
-
-        console.log(nome + ' - removido com sucesso');
-    
-        // const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
-        // setFuncionarios([]);
-        // let newArray = [];
-        // for (const row of allRows) {
-        //   console.log(row.id, row.value, row.intValue);
-        //   newArray.push(row.value);
-        // }
-
+        
+        try {
+            let result = await statement.executeAsync(
+                { $name: nome }
+            );
+            console.log('nova atualização:', result, result.changes);
+            
+        } finally {
+            await statement.finalizeAsync();
+            console.log(nome + ' - removido com sucesso');
+        }
     }
 
     // metodo pra remover pelo nome
     async function removeById(id){
         const db = await SQLite.openDatabaseAsync('opentests');
 
-        await db.runAsync(
-          'DELETE FROM funcionarios WHERE id = $id', { 
-            $id: id
-          }
+        const statement = await db.prepareAsync(
+            'DELETE FROM funcionarios WHERE id = $id'
         );
-
-        console.log(id + ' - removido com sucesso');
+        
+        try {
+            let result = await statement.executeAsync(
+                { $id: id }
+            );
+            console.log('nova atualização:', result, result.changes);
+            
+        } finally {
+            await statement.finalizeAsync();
+            console.log(id + ' - removido com sucesso');
+        }
     }
 
     // procurando pelo funcionário pelo nome e retornando um objeto com seus atributos
@@ -169,13 +159,6 @@ export default function useDatabaseConfig() {
             
             resolve(result)
         })
-
-        // promiseResult
-        // .then((funcionario) => {
-        //     console.log('resposta de fora: ' + funcionario.name)
-        //     // return new Funcionario(funcionario.id, funcionario.name, funcionario.cargo, funcionario.salario)
-        // })
-
     }
 
     return { 
