@@ -8,6 +8,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import ValeCard from '../components/valeCard';
 import { useNavigation } from '@react-navigation/native';
 
+// NÃO APAGAR ESSA TELA, to utilizando pra testes com o banco de dados e as tabelas
 // essa tela é temporaria, fiz só pra testar a navegação stack e os metodos de atualização e exclusão
 export default function ViewAndEdit( { route } ) {
 
@@ -15,7 +16,7 @@ export default function ViewAndEdit( { route } ) {
   const funcionarioId = route.params.funcId;
 
   // states para os campos do funcionário
-  const [ name, setName ] = useState('');
+  const [ nome, setNome ] = useState('');
   const [ cargo, setCargo ] = useState('');
   const [ salario, setSalario ] = useState(0);
 
@@ -36,7 +37,7 @@ export default function ViewAndEdit( { route } ) {
   useEffect(() => {
     db.findById_WithDB(funcionarioId).then((f) => {
 
-      setName(f.name);
+      setNome(f.nome);
       setCargo(f.cargo);
       setSalario((f.salario).toString());
       // validação para campo de vales vazio na tabela do bd
@@ -80,8 +81,8 @@ export default function ViewAndEdit( { route } ) {
                   readOnly={edit}
                   style={styles.input}
                   placeholder={''}
-                  value={name}
-                  onChangeText={setName}
+                  value={nome}
+                  onChangeText={setNome}
                 />
               </View>
               
@@ -111,7 +112,7 @@ export default function ViewAndEdit( { route } ) {
                 <View style={styles.boxBotao}>
                   <TouchableOpacity style={styles.botao}
                     onPress={() => {
-                      db.updateAllFields(name, cargo, Number(salario), funcionarioId);
+                      db.updateAllFields(nome, cargo, Number(salario), funcionarioId);
                     }}
                   >
                     <Text style={styles.textbotao}>Salvar alterações</Text>

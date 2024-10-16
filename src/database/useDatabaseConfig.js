@@ -9,44 +9,59 @@ export default function useDatabaseConfig() {
     const databaseOnUse = 'opentests';
 
     // para criar um funcionario
-    async function create(name, cargo, salario) {
+    async function create(nome, cargo, salario, cpf, telefone) {
         const db = await SQLite.openDatabaseAsync(databaseOnUse);
 
         // caso for a primeira vez que o usuario entrar no aplicativo, essa query vai precisar rodar pra criar a tabela
         // atualização: adição do campo vales na tabela de funcionários
         await db.execAsync(`
             PRAGMA journal_mode = WAL;
-            CREATE TABLE IF NOT EXISTS funcionarios (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, cargo TEXT NOT NULL, salario INTEGER NOT NULL, vales TEXT);
+            CREATE TABLE IF NOT EXISTS funcionarios 
+            (
+                id INTEGER PRIMARY KEY NOT NULL, 
+                nome VARCHAR(30) NOT NULL, 
+                cargo VARCHAR(30) NOT NULL, 
+                salario REAL NOT NULL,
+                cpf INTEGER,
+                telefone INTEGER,
+                vales TEXT,
+                dataDeAdmissao DATE,
+                dataDeDemissao DATE,
+                fotoDePerfil TEXT
+            );
         `);
 
+        // por enquanto vou colocar só esses campos na hora do cadastro, ainda to vendo a melhor forma de inserir datas e a foto de perfil
         await db.runAsync(
-            'INSERT INTO funcionarios (name, cargo, salario) VALUES (?, ?, ?)',
-            name,
+            'INSERT INTO funcionarios (nome, cargo, salario, cpf, telefone) VALUES (?, ?, ?, ?, ?)',
+            nome,
             cargo,
             salario,
+            cpf,
+            telefone,
         );
         
         // pra debug
-        console.log(name + ' - cadastrado com sucesso');
+        console.log(nome + ' - cadastrado com sucesso');
 
     }
 
     // atualizando os campos do funcinoário, útil para quando for implementar a tela de editar um funcionário
     // testei e ta funcionando bem
     // -> a execução do método antigo tava entrando em conflito com o updateVale devido a falta de preparo do statement e finalização do mesmo, agora tá funcionando bem ... possivelmente vou ter que fazer uma atualização dos demais métodos e usar o prepareAsync com o finalizeAsync para evitar possíveis erros
-    async function updateAllFields(name, cargo, salario, id) {
+    async function updateAllFields(nome, cargo, salario, id) {
         const db = await SQLite.openDatabaseAsync(databaseOnUse);
 
         console.log('entrou no update allfields')
 
         // criando o statement
         const statement = await db.prepareAsync(
-            'UPDATE funcionarios SET name = $name, cargo = $cargo, salario = $salario WHERE id = $id'
+            'UPDATE funcionarios SET nome = $nome, cargo = $cargo, salario = $salario WHERE id = $id'
         );
 
         try {
             let result = await statement.executeAsync(
-                { $name: name, $cargo: cargo, $salario: salario, $id: id }
+                { $nome: nome, $cargo: cargo, $salario: salario, $id: id }
             );
             console.log('nova atualização:', result, result.changes);
             
@@ -85,23 +100,23 @@ export default function useDatabaseConfig() {
         let newArray = [];
         for (const row of allRows) {
             // substitui o objeto literal pela classe funcionário para guardar no array
-            newArray.push(new Funcionario(row.id, row.name, row.cargo, row.salario, row.vales));
+            newArray.push(new Funcionario(row.id, row.nome, row.cargo, row.salario, row.vales));
         }
         setFuncionarios(newArray);
     }
     
     // metodo pra remover pelo nome
     // atualizei a forma que estava executando a query para prevenir erros de async nos metodos abaixo
-    async function removeByName(nome){
+    async function removeByNome(nome){
         const db = await SQLite.openDatabaseAsync(databaseOnUse);
 
         const statement = await db.prepareAsync(
-            'DELETE FROM funcionarios WHERE name = $name'
+            'DELETE FROM funcionarios WHERE nome = $nome'
         );
         
         try {
             let result = await statement.executeAsync(
-                { $name: nome }
+                { $nome: nome }
             );
             console.log('nova atualização:', result, result.changes);
             
@@ -133,7 +148,7 @@ export default function useDatabaseConfig() {
 
     // procurando pelo funcionário pelo nome e retornando um objeto com seus atributos
     // às vezes funciona bem, às vezes não
-    //  o método tem um delay de funcionamento, às vezes quando chama a primeira vez o objeto pode retornar undefined devido o delay do banco de dados, ou as vezes nao reconhece os gets e sets
+    //  o método tem um delay de funcionomento, às vezes quando chama a primeira vez o objeto pode retornar undefined devido o delay do banco de dados, ou as vezes nao reconhece os gets e sets
     function findById(id) {
         // chamando o gelAll para atualizar o array de funcionarios
         getAll();
@@ -164,16 +179,45 @@ export default function useDatabaseConfig() {
         })
     }
 
+    async function drop() {
+        const db = await SQLite.openDatabaseAsync(databaseOnUse);
+
+        // caso for a primeira vez que o usuario entrar no aplicativo, essa query vai precisar rodar pra criar a tabela
+        // atualização: adição do campo vales na tabela de funcionários
+        await db.execAsync(`
+            DROP TABLE funcionarios
+        `);
+        
+        // pra debug
+        console.log('tabela apagada com sucesso');
+
+    }
+
+    async function viewAll() {
+        const db = await SQLite.openDatabaseAsync(databaseOnUse);
+
+        const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
+        setFuncionarios([]);
+        let newArray = [];
+        for (const row of allRows) {
+            // substitui o objeto literal pela classe funcionário para guardar no array
+            console.log(row.id, row.nome, row.cargo, row.salario, row.cpf, row.telefone, row.vales, row.dataDeAdmissao, row.dataDeDemissao, row.fotoDePerfil);
+        }
+        setFuncionarios(newArray);
+    }
+
     return { 
         databaseOnUse, 
         create, 
         getAll, 
-        removeByName, 
+        removeByNome, 
         removeById, 
         updateAllFields, 
         updateVale, 
         findById,
         findById_WithDB,
+        drop,
+        viewAll,
         funcionarios 
     }
 }

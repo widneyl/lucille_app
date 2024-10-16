@@ -27,7 +27,7 @@ export default function ViewEmployeeCards() {
       for (const row of allRows) {
         
         // mudei de objeto literal para o objeto funcionario da entidade
-        newArray.push(new Funcionario(row.id, row.name, row.cargo, row.salario))
+        newArray.push(new Funcionario(row.id, row.nome, row.cargo, row.salario))
         // console.log(empolyee); // debug para checar o objeto individual
       }
       setFunShow(newArray);

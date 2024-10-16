@@ -26,9 +26,16 @@ export default function Debug() {
       />
 
       <Button
-        title='Verificar'
+        title='dropar tabela antiga'
         onPress={() => {
-          db.getAll();
+          db.drop();
+        }}
+      />
+
+      <Button
+        title='visualizar todos funcionários no console'
+        onPress={() => {
+          db.viewAll();
         }}
       />
 
