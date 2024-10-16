@@ -1,40 +1,40 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import EmployeeCard from '../employeeCard';
 import { useCallback, useState } from 'react';
 
 import * as SQLite from 'expo-sqlite';
 import { useFocusEffect } from '@react-navigation/native';
 import { Funcionario } from '../../entity/Funcionario';
+import useDatabaseConfig from '../../database/useDatabaseConfig';
 
 // criei essa rota só pra poder visualizar os componentes que estava criando
 export default function ViewEmployeeCards() {  
   const [ funShow, setFunShow ] = useState([]);
 
+  // instância para usar o banco de dados
+  const database = useDatabaseConfig();
+
   // a funão getAll vai ficar fora do useEffect, pois vai ser chamada em um useFocusEffect agora
   const getAll = async () => {
-    const db = await SQLite.openDatabaseAsync('opentests');
-
-    const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
-
-    setFunShow([]);
-    let newArray = [];
-    for (const row of allRows) {
-      
-      // objeto para guardar funcionario
-      // const employee = {
-      //   id: row.id,
-      //   name: row.name,
-      //   cargo: row.cargo,
-      //   salario: row.salario,
-      // };
-
-      // newArray.push(employee);
-      
-      // mudei de objeto literal para o objeto funcionario da entidade
-      newArray.push(new Funcionario(row.id, row.name, row.cargo, row.salario))
-      // console.log(empolyee); // debug para checar o objeto individual
+    // coloquei a chamada do db dentro de um try catch para caso não houver nenhum funcionário cadastrado não surgir um erro
+    try {
+      const db = await SQLite.openDatabaseAsync(database.databaseOnUse);
+  
+      const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
+  
+      setFunShow([]);
+      let newArray = [];
+      for (const row of allRows) {
+        
+        // mudei de objeto literal para o objeto funcionario da entidade
+        newArray.push(new Funcionario(row.id, row.name, row.cargo, row.salario))
+        // console.log(empolyee); // debug para checar o objeto individual
+      }
+      setFunShow(newArray);
+    } catch (error) {
+      console.log('deu um erro: ' + error);
+      setFunShow([]);
     }
-    setFunShow(newArray);
   };
 
   // toda vez que o templateHome estiver em focus vai chamar um callBack que chama a função getAll()
@@ -58,6 +58,12 @@ export default function ViewEmployeeCards() {
         <View style={styles.internView}>
 
           {
+            (funShow.length == 0) ?
+            <>
+              {/* depois aplicar algum estilo pra mensagem ficar mais bonitinha */}
+              <Text>Nenhum funcionário cadastrado!</Text> 
+            </>
+            :
             funShow.map((e) => (
               <EmployeeCard key={e.id} id={e.id} nome={e.nome} cargo={e.cargo}/>
             ))

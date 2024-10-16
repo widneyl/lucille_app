@@ -5,9 +5,12 @@ import { Funcionario } from '../entity/Funcionario';
 export default function useDatabaseConfig() {
     const [ funcionarios, setFuncionarios ] = useState([]);
 
+    // variável com nome do banco de dados em uso, também coloquei ela pra exportar, vai ficar mais prático pra abrir o banco
+    const databaseOnUse = 'opentests';
+
     // para criar um funcionario
     async function create(name, cargo, salario) {
-        const db = await SQLite.openDatabaseAsync('opentests');
+        const db = await SQLite.openDatabaseAsync(databaseOnUse);
 
         // caso for a primeira vez que o usuario entrar no aplicativo, essa query vai precisar rodar pra criar a tabela
         // atualização: adição do campo vales na tabela de funcionários
@@ -32,7 +35,7 @@ export default function useDatabaseConfig() {
     // testei e ta funcionando bem
     // -> a execução do método antigo tava entrando em conflito com o updateVale devido a falta de preparo do statement e finalização do mesmo, agora tá funcionando bem ... possivelmente vou ter que fazer uma atualização dos demais métodos e usar o prepareAsync com o finalizeAsync para evitar possíveis erros
     async function updateAllFields(name, cargo, salario, id) {
-        const db = await SQLite.openDatabaseAsync('opentests');
+        const db = await SQLite.openDatabaseAsync(databaseOnUse);
 
         console.log('entrou no update allfields')
 
@@ -55,7 +58,7 @@ export default function useDatabaseConfig() {
     // atualizando os vales do funcionário a partir do id
     async function updateVale(id, vales) {
         console.log('entrou no update vale')
-        const db = await SQLite.openDatabaseAsync('opentests');
+        const db = await SQLite.openDatabaseAsync(databaseOnUse);
 
         // criando o statement
         const statement = await db.prepareAsync(
@@ -75,7 +78,7 @@ export default function useDatabaseConfig() {
     
     // atribuindo todos funcionários no array
     async function getAll() {
-        const db = await SQLite.openDatabaseAsync('opentests');
+        const db = await SQLite.openDatabaseAsync(databaseOnUse);
 
         const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
         setFuncionarios([]);
@@ -90,7 +93,7 @@ export default function useDatabaseConfig() {
     // metodo pra remover pelo nome
     // atualizei a forma que estava executando a query para prevenir erros de async nos metodos abaixo
     async function removeByName(nome){
-        const db = await SQLite.openDatabaseAsync('opentests');
+        const db = await SQLite.openDatabaseAsync(databaseOnUse);
 
         const statement = await db.prepareAsync(
             'DELETE FROM funcionarios WHERE name = $name'
@@ -110,7 +113,7 @@ export default function useDatabaseConfig() {
 
     // metodo pra remover pelo nome
     async function removeById(id){
-        const db = await SQLite.openDatabaseAsync('opentests');
+        const db = await SQLite.openDatabaseAsync(databaseOnUse);
 
         const statement = await db.prepareAsync(
             'DELETE FROM funcionarios WHERE id = $id'
@@ -150,7 +153,7 @@ export default function useDatabaseConfig() {
 
     // procurando e retornando o funcionário diretamento do banco de dados
     async function findById_WithDB(id) {
-        const db = await SQLite.openDatabaseAsync('opentests');
+        const db = await SQLite.openDatabaseAsync(databaseOnUse);
         let result;
         
         return new Promise(async function (resolve, reject) {
@@ -162,6 +165,7 @@ export default function useDatabaseConfig() {
     }
 
     return { 
+        databaseOnUse, 
         create, 
         getAll, 
         removeByName, 
