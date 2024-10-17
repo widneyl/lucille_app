@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { useEffect, useState } from 'react';
 
 import useDatabaseConfig from '../database/useDatabaseConfig';
@@ -6,7 +6,9 @@ import useDatabaseConfig from '../database/useDatabaseConfig';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'; 
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import ValeCard from '../components/valeCard';
+import { useNavigation } from '@react-navigation/native';
 
+// NÃO APAGAR ESSA TELA, to utilizando pra testes com o banco de dados e as tabelas
 // essa tela é temporaria, fiz só pra testar a navegação stack e os metodos de atualização e exclusão
 export default function ViewAndEdit( { route } ) {
 
@@ -14,7 +16,7 @@ export default function ViewAndEdit( { route } ) {
   const funcionarioId = route.params.funcId;
 
   // states para os campos do funcionário
-  const [ name, setName ] = useState('');
+  const [ nome, setNome ] = useState('');
   const [ cargo, setCargo ] = useState('');
   const [ salario, setSalario ] = useState(0);
 
@@ -29,13 +31,19 @@ export default function ViewAndEdit( { route } ) {
   // instância das configurações do banco de dados
   const db = useDatabaseConfig();
 
+  // navigator 
+  const navigator = useNavigation();
+
   useEffect(() => {
     db.findById_WithDB(funcionarioId).then((f) => {
 
-      setName(f.name);
+      setNome(f.nome);
       setCargo(f.cargo);
       setSalario((f.salario).toString());
-      setVales(JSON.parse(f.vales));
+      // validação para campo de vales vazio na tabela do bd
+      if (f.vales != null) {
+        setVales(JSON.parse(f.vales));
+      }
 
     })
     .catch(err => console.log('deu erro aqui no atualizafunc: ' + err))
@@ -73,8 +81,8 @@ export default function ViewAndEdit( { route } ) {
                   readOnly={edit}
                   style={styles.input}
                   placeholder={''}
-                  value={name}
-                  onChangeText={setName}
+                  value={nome}
+                  onChangeText={setNome}
                 />
               </View>
               
@@ -104,7 +112,7 @@ export default function ViewAndEdit( { route } ) {
                 <View style={styles.boxBotao}>
                   <TouchableOpacity style={styles.botao}
                     onPress={() => {
-                      db.updateAllFields(name, cargo, Number(salario), funcionarioId);
+                      db.updateAllFields(nome, cargo, Number(salario), funcionarioId);
                     }}
                   >
                     <Text style={styles.textbotao}>Salvar alterações</Text>
@@ -125,6 +133,7 @@ export default function ViewAndEdit( { route } ) {
                     <TouchableOpacity style={styles.botao}
                       onPress={() => {
                         db.removeById(funcionarioId);
+                        navigator.navigate('Home');
                       }}
                     >
                       <FontAwesome6 name="trash" color={'white'} size={20}/>
@@ -143,6 +152,11 @@ export default function ViewAndEdit( { route } ) {
 
                 {/* logica para exibição dos cards do funcionário */}
                 {
+                  // caso o campo de vales esteja vazio no funcionário, deve exibir somente uma mensagem, caso contrário exibir os componentes do card
+                  (vales.length == 0) 
+                  ?
+                  <Text>Sem vales</Text>
+                  :
                   vales.map((v) => (
                     <ValeCard key={Math.random()} descricao={v.descricao} preco={v.valor}/>
                   ))

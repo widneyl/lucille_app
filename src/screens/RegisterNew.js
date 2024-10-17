@@ -19,6 +19,8 @@ export default function Register() {
     const [name, setName] = useState('');
     const [cargo, setCargo] = useState('');
     const [salario, setSalario] = useState(0);
+    const [cpf, setCpf] = useState(0);
+    const [telefone, setTelefone] = useState(0);
 
     const navigation = useNavigation();
 
@@ -79,7 +81,8 @@ export default function Register() {
                                 <TextInput
                                     style={styles.input}
                                     placeholder='xxx.xxx.xx-xx'
-
+                                    keyboardType='numeric'
+                                    onChangeText={setCpf}
                                 />
                             </View>
                         </View>
@@ -97,7 +100,8 @@ export default function Register() {
                                 <TextInput
                                     style={styles.input}
                                     placeholder=' (+55) 9 0000-0000'
-
+                                    keyboardType='numeric'
+                                    onChangeText={setTelefone}
                                 />
                             </View>
                         </View>
@@ -176,7 +180,7 @@ export default function Register() {
                     <View style={styles.boxBotao}>
                         <TouchableOpacity style={styles.botao}
                             onPress={() => {
-                                database.create(name, cargo, salario);
+                                database.create(name, cargo, salario, cpf, telefone);
                                 navigation.navigate('Home');
                             }}
                         >
