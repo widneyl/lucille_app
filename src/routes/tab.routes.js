@@ -9,7 +9,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Home from '../screens/Home'
 import Register from '../screens/RegisterNew'
 import Debug from "../screens/debugArea";
-import ViewAndEdit from "../screens/ViewAndEdit";
+import vale from "../screens/Vale";
 
 // importação dos tipos de navegações
 const Stack = createStackNavigator();
@@ -93,9 +93,10 @@ export default function AllRoutes() {
           />
 
           {/* primeira rota em pilha, tela temporária para visualizar as informações do funcionário */}
+          {/* ATUALIZAÇÃO: A tela oficial "Vale" esta sendo chamada agora*/}
           <Stack.Screen 
-            name="ViewAndEdit" 
-            component={ViewAndEdit}
+            name="Vale" 
+            component={vale}
           />  
         </Stack.Navigator>
     );
