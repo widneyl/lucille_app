@@ -13,7 +13,7 @@ export default function EmployeeCard( { id, nome, cargo, img } ) {
             // função pra testar o clique no componente card
             onPress={() => {
               console.log('pressionando o componente com nome de ' + nome)
-              navigate.navigate('ViewAndEdit', { funcId: id });
+              navigate.navigate('Vale', { funcId: id }); //Troquei o nome do componente que vai ser chamado, agora esta chamando a rota Vale
             }}
         >
           {/* container da foto de perfil do funcionario */}
