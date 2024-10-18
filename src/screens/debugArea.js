@@ -26,9 +26,23 @@ export default function Debug() {
       />
 
       <Button
+        title='visualizar produtos'
+        onPress={() => {
+          db.viewAllProducts();
+        }}
+      />
+
+      <Button
+        title='criar tabela produtos'
+        onPress={() => {
+          db.productTable();
+        }}
+      />
+
+      <Button
         title='dropar tabela antiga'
         onPress={() => {
-          db.drop();
+          db.drop(id);
         }}
       />
 
@@ -41,7 +55,7 @@ export default function Debug() {
 
       <Button
         title='Remover por nome'
-        onPress={() => db.removeByName(nome)}
+        onPress={() => db.removeByNome(nome)}
       />
 
       <Button

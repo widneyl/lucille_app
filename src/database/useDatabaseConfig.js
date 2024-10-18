@@ -1,6 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 import { useState } from 'react';
 import { Funcionario } from '../entity/Funcionario';
+import { allProdutosOnInsertLine } from './productsInsert';
 
 export default function useDatabaseConfig() {
     const [ funcionarios, setFuncionarios ] = useState([]);
@@ -179,13 +180,11 @@ export default function useDatabaseConfig() {
         })
     }
 
-    async function drop() {
+    async function drop(tabela) {
         const db = await SQLite.openDatabaseAsync(databaseOnUse);
 
-        // caso for a primeira vez que o usuario entrar no aplicativo, essa query vai precisar rodar pra criar a tabela
-        // atualização: adição do campo vales na tabela de funcionários
         await db.execAsync(`
-            DROP TABLE funcionarios
+            DROP TABLE ${tabela}
         `);
         
         // pra debug
@@ -197,13 +196,45 @@ export default function useDatabaseConfig() {
         const db = await SQLite.openDatabaseAsync(databaseOnUse);
 
         const allRows = await db.getAllAsync('SELECT * FROM funcionarios');
-        setFuncionarios([]);
-        let newArray = [];
         for (const row of allRows) {
             // substitui o objeto literal pela classe funcionário para guardar no array
             console.log(row.id, row.nome, row.cargo, row.salario, row.cpf, row.telefone, row.vales, row.dataDeAdmissao, row.dataDeDemissao, row.fotoDePerfil);
         }
-        setFuncionarios(newArray);
+    }
+
+    // essa função cria a tabela e já insere os produtos nela, deve ser chamada pela primeira vez que o aplicativo for instalado pelo usuário
+    async function productTable() {
+        const db = await SQLite.openDatabaseAsync(databaseOnUse);
+
+        // criando tabela de produtos
+        await db.execAsync(`
+            PRAGMA journal_mode = WAL;
+            CREATE TABLE IF NOT EXISTS produtos 
+            (
+                id INTEGER PRIMARY KEY NOT NULL, 
+                descricao TEXT NOT NULL, 
+                preco REAL NOT NULL,
+                fotoDoProduto TEXT
+            );
+        `);
+        console.log('tabela criada com sucesso')
+
+        // verificando se os produtos já estão ou não inseridos
+        const result = await db.getFirstAsync('SELECT COUNT(*) FROM produtos');
+
+        // se a quantidade de linhas for 0 significa que os produtos precisam ser inseridos 
+        (result['COUNT(*)'] == 0) ? await db.runAsync( allProdutosOnInsertLine) : console.log('os produtos já estão cadastrados')
+       
+    }
+
+    // visualizar todos produtos para testes
+    async function viewAllProducts() {
+        const db = await SQLite.openDatabaseAsync(databaseOnUse);
+
+        const allRows = await db.getAllAsync('SELECT * FROM produtos');
+        for (const row of allRows) {
+            console.log(row.id, row.descricao, row.preco);
+        }
     }
 
     return { 
@@ -218,6 +249,8 @@ export default function useDatabaseConfig() {
         findById_WithDB,
         drop,
         viewAll,
-        funcionarios 
+        funcionarios,
+        productTable,
+        viewAllProducts 
     }
 }
