@@ -24,11 +24,59 @@ import ProfileImage from '../img/profileIconEdit.png'
 import IconMoney from '../img/money.png'
 import IconFood from '../img/food.png'
 import Clock from '../img/clock.png'
+import useDatabaseConfig from '../database/useDatabaseConfig';
+import { useEffect, useState } from 'react';
 
 
-export default function ViewAndEdit() {
+export default function ViewAndEdit( { route } ) {
 
+    // guardando o id do funcionario que foi passado pelo parametro
+    const funcionarioId = route.params.funcId;
 
+    // state para nome do funcionário
+    const [nomeDoFuncionario, setNomeDoFuncionario] = useState();
+
+    // states para controle dos vales
+    const [vales, setVales] = useState([])
+
+    // state para campos do vale
+    const [produto, setProduto] = useState('')
+    const [valor, setValor] = useState(0)
+
+    // instância para o banco de dados
+    const db = useDatabaseConfig();
+
+    // logo ao entrar na tela o useEffect vai setar o nome do funcionário
+    useEffect(() => {
+        db.findById_WithDB(funcionarioId).then((f) => {
+    
+          setNomeDoFuncionario(f.nome);
+          // validação para campo de vales vazio na tabela do bd
+          if (f.vales != null) {
+            setVales(JSON.parse(f.vales));
+          }
+        })
+        .catch(err => console.log('deu erro aqui no atualizafunc: ' + err))
+    },[])
+
+    function adicionarNovoVale() {
+        const vale = {
+            descricao: produto,
+            valor: Number(valor),
+        }
+
+        // console.log(vale)
+    
+        let arrayVale = vales;
+        arrayVale.push(vale);
+        setVales(arrayVale);
+    
+        // console.log(vales);
+    
+        let valesStr = JSON.stringify(vales);
+    
+        db.updateVale(funcionarioId, valesStr);
+    }
 
     return (
         <View style={styles.container}>
@@ -52,7 +100,8 @@ export default function ViewAndEdit() {
                         <View style={styles.boxProfileOptions}>
 
                             {/*Aqui é necessaario que seja exibido o nome do funcionario referente ao card*/}
-                            <Text style={styles.textNameProfile}>Nome do funcionario</Text>
+                            {/* >> 18/10/2024 sofia: já está exibindo */}
+                            <Text style={styles.textNameProfile}>{nomeDoFuncionario}</Text>
 
                             {/* Botão que leva para a tela de perfil do funcionario.
                                 Aqui vai precisar de uma rota, talvez uma stack mesmo ja vai ser o suficiente.  
@@ -115,6 +164,7 @@ export default function ViewAndEdit() {
                                         <TextInput
                                             style={styles.input}
                                             placeholder='Coca-Cola Lata'
+                                            onChangeText={setProduto}
                                         />
                                     </View>
                                 </View>
@@ -135,6 +185,7 @@ export default function ViewAndEdit() {
                                         <TextInput
                                             style={styles.input}
                                             placeholder='20'
+                                            onChangeText={setValor}
                                         />
                                     </View>
                                 </View>
@@ -180,7 +231,11 @@ export default function ViewAndEdit() {
 
                     </View>
 
-                    <TouchableOpacity style={styles.bottonAdd}>
+                    <TouchableOpacity style={styles.bottonAdd}
+                        onPress={() => {
+                            adicionarNovoVale();
+                        }}
+                    >
                         <Text style={{ color: 'white', fontSize: 16 }}>Adicionar</Text>
                     </TouchableOpacity>
 
