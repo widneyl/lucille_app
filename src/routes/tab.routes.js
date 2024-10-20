@@ -10,6 +10,7 @@ import Home from '../screens/Home'
 import Register from '../screens/RegisterNew'
 import Debug from "../screens/debugArea";
 import vale from "../screens/Vale";
+import ViewProducts from "../screens/ViewProducts";
 
 // importação dos tipos de navegações
 const Stack = createStackNavigator();
@@ -97,6 +98,12 @@ export default function AllRoutes() {
           <Stack.Screen 
             name="Vale" 
             component={vale}
+          />  
+
+          {/* tela temporaria para ver produtos e testar lógicas */}
+          <Stack.Screen 
+            name="ViewProducts" 
+            component={ViewProducts}
           />  
         </Stack.Navigator>
     );
