@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { Button, FlatList, SafeAreaView, StyleSheet } from "react-native";
 
 import { Vale } from '../entity/Vale';
@@ -8,18 +9,28 @@ import useDatabaseConfig from '../database/useDatabaseConfig';
 import ProductCard from "../components/productCard";
 import SearchBar from "../components/searchBar";
 
-export default function ViewProducts() {
-    
+// criei essa tela pra exibir todos os produtos que foram armazenados no bd na tabela produtos
+// o design que fiz foi só pra ficar mais apresentável, deve passar por mudanças e ser adaptado ao do figma
+export default function ViewProducts( { route } ) {
+
+    // guardando o id e vales do funcionário que recebidos por parametros
+    const funcionarioId = route.params.funcId;
+    const vales = route.params.vale;
+
     // state para aramzenar todos os produtos
     const [produtos, setProdutos] = useState([]);
 
     // state para armazenar os produtos filtrados
     const [produtosFiltrados, setProdutosFiltrados] = useState(produtos); // os produtos filtrados começam recebendo todos os produtos, conforme alguma pesquisa for feita a exibição vai sendo alterada
 
+    // state para armazenar os produtos que o usuário escolheu ao clicar no componente
     const [produtosEscolhidos, setProdutosEscolhidos] = useState([])
 
     // instância para bd
     const database = useDatabaseConfig();
+
+    // navigator para voltar pra tela de visualizar funcionário
+    const navigator = useNavigation();
 
     useEffect(() => {
         // função para trazer todos os produtos do banco de dados e exibi-los
@@ -70,6 +81,19 @@ export default function ViewProducts() {
         }
     }
 
+    // a atualização do vale vai ser feita nessa tela mesmo ao clicar em adicionar
+    const atualizarVale = () => {
+        let arrayVale = vales.concat(produtosEscolhidos);
+        // console.log(arrayVale)
+        
+        let strVale = JSON.stringify(arrayVale);
+
+        database.updateVale(funcionarioId, strVale);
+
+        // depois do update, o navigator deve redirecionar para tela anterior automaticamente
+        navigator.goBack();
+    }
+
     return (
         <>
             <SafeAreaView style={styles.container}>
@@ -90,7 +114,8 @@ export default function ViewProducts() {
                     title="Adicionar"
                     onPress={() => {
                         console.log('produtos adicionados no vale:')
-                        console.log(produtosEscolhidos);
+                        // console.log(produtosEscolhidos);
+                        atualizarVale();
                     }}
                 />
             </SafeAreaView>

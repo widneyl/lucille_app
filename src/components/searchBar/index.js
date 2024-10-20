@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 
+// componente de barra de pesquisa para usar na visualização de produtos
 export default function SearchBar ({ pesquisarPor }) {
   const [pesquisa, setPesquisa] = useState('');
 
@@ -36,8 +37,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 10,
     backgroundColor: '#fff',
-    elevation: 2, // sombra no Android
-    shadowColor: '#000', // sombra no iOS
+    elevation: 2,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,

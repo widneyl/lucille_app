@@ -25,7 +25,10 @@ import IconMoney from '../img/money.png'
 import IconFood from '../img/food.png'
 import Clock from '../img/clock.png'
 import useDatabaseConfig from '../database/useDatabaseConfig';
-import { useEffect, useState } from 'react';
+import ValeCard from '../components/valeCard';
+
+import { useCallback, useEffect, useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 
 export default function ViewAndEdit( { route } ) {
@@ -39,12 +42,11 @@ export default function ViewAndEdit( { route } ) {
     // states para controle dos vales
     const [vales, setVales] = useState([])
 
-    // state para campos do vale
-    const [produto, setProduto] = useState('')
-    const [valor, setValor] = useState(0)
-
     // instância para o banco de dados
     const db = useDatabaseConfig();
+
+    // instância para navegar para outras telas
+    const navigator = useNavigation()
 
     // logo ao entrar na tela o useEffect vai setar o nome do funcionário
     useEffect(() => {
@@ -59,24 +61,40 @@ export default function ViewAndEdit( { route } ) {
         .catch(err => console.log('deu erro aqui no atualizafunc: ' + err))
     },[])
 
-    function adicionarNovoVale() {
-        const vale = {
-            descricao: produto,
-            valor: Number(valor),
-        }
+    // o useFocusEffect vai fazer acontecer o reload dos vales adicionados depois de adicinados na tela de produtos, ao entrar em foco ele vai buscar os vales do funcionario do bd
+    useFocusEffect(
+        useCallback(() => {
+            console.log('to aqui no componente vale');
+            db.findById_WithDB(funcionarioId).then((f) => {
+    
+                // validação para campo de vales vazio na tabela do bd
+                if (f.vales != null) {
+                  setVales(JSON.parse(f.vales));
+                }
+              })
+            .catch(err => console.log('deu erro aqui no atualizafunc: ' + err))
+        }, [])
+    );
 
-        // console.log(vale)
+    // agora com a tela de exibição dos produtos, essa função fica inutilizada
+    // function adicionarNovoVale() {
+    //     const vale = {
+    //         descricao: produto,
+    //         valor: Number(valor),
+    //     }
+
+    //     // console.log(vale)
     
-        let arrayVale = vales;
-        arrayVale.push(vale);
-        setVales(arrayVale);
+    //     let arrayVale = vales;
+    //     arrayVale.push(vale);
+    //     setVales(arrayVale);
     
-        // console.log(vales);
+    //     // console.log(vales);
     
-        let valesStr = JSON.stringify(vales);
+    //     let valesStr = JSON.stringify(vales);
     
-        db.updateVale(funcionarioId, valesStr);
-    }
+    //     db.updateVale(funcionarioId, valesStr);
+    // }
 
     return (
         <View style={styles.container}>
@@ -231,9 +249,26 @@ export default function ViewAndEdit( { route } ) {
 
                     </View>
 
+                    {
+                        // caso o campo de vales esteja vazio no funcionário, deve exibir somente uma mensagem, caso contrário exibir os componentes do card
+                        (vales.length == 0) 
+                        ?
+                        <Text>Sem vales</Text>
+                        :
+                        vales.map((v) => (
+                            <ValeCard key={v.id} descricao={v.descricao} preco={v.preco}/>
+                        ))
+                    }
+
                     <TouchableOpacity style={styles.bottonAdd}
                         onPress={() => {
-                            adicionarNovoVale();
+                            // adicionarNovoVale();
+
+                            // navegando para a tela de listagem de produtos, aqui passo por parametro o id e os vales do funcionário em questão
+                            navigator.navigate('ViewProducts', { 
+                                funcId: funcionarioId,
+                                vale: vales 
+                            })
                         }}
                     >
                         <Text style={{ color: 'white', fontSize: 16 }}>Adicionar</Text>
