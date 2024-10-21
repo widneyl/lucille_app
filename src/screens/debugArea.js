@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import useDatabaseConfig from '../database/useDatabaseConfig';
 import { useState } from 'react';
 import { Funcionario } from '../entity/Funcionario';
+import { useNavigation } from '@react-navigation/native';
 
 // criei essa tela pra ficar testando as novas funções que a gente for desenvolvendo no aplicativo
 export default function Debug() {
@@ -9,6 +10,8 @@ export default function Debug() {
   const [nome, setNome] = useState('')
 
   const db = useDatabaseConfig();
+
+  const navigator = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -25,10 +28,32 @@ export default function Debug() {
         onChangeText={setId}
       />
 
+      {/* redirecionamento para tela de adição de produtos no vale de um funcionário */}
+      <Button
+        title='ver produtos e adicionar'
+        onPress={() => {
+          navigator.navigate('ViewProducts')
+        }}
+      />
+
+      <Button
+        title='visualizar produtos'
+        onPress={() => {
+          db.viewAllProducts();
+        }}
+      />
+
+      <Button
+        title='criar tabela produtos'
+        onPress={() => {
+          db.productTable();
+        }}
+      />
+
       <Button
         title='dropar tabela antiga'
         onPress={() => {
-          db.drop();
+          db.drop(id);
         }}
       />
 
@@ -41,7 +66,7 @@ export default function Debug() {
 
       <Button
         title='Remover por nome'
-        onPress={() => db.removeByName(nome)}
+        onPress={() => db.removeByNome(nome)}
       />
 
       <Button

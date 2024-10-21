@@ -1,0 +1,582 @@
+[
+    {
+        "name": "Queijo a milanesa",
+        "price": 11.90
+    },
+    {
+        "name": "Filé de frango crocante",
+        "price": 14.90
+    },
+    {
+        "name": "Bolinha de queijo",
+        "price": 13.90
+    },
+    {
+        "name": "Batata frita",
+        "price": 15.90
+    },
+    {
+        "name": "Macaxeira",
+        "price": 14.90
+    },
+    {
+        "name": "Pão de alho tradicional",
+        "price": 4.90
+    },
+    {
+        "name": "Bolinha de carne de sol",
+        "price": 14.90
+    },
+    {
+        "name": "Kibe",
+        "price": 15.90
+    },
+    {
+        "name": "Macaxeira c/ queijo e alho",
+        "price": 16.90
+    },
+    {
+        "name": "Batata frita c/ queijo e cheddar" ,
+        "price": 22.90
+    },
+    {
+        "name": "Camarão a milanesa",
+        "price": 24.90
+    },
+    {
+        "name": "Camarão alho e óleo",
+        "price": 29.90
+    },
+    {
+        "name": "Carme de sol c/ macaxeira",
+        "price": 34.90
+    },
+    {
+        "name": "Filé mignon trinchado c/ fritas",
+        "price": 34.90
+    },
+    {
+        "name": "Torresmo",
+        "price": 7.90
+    },
+    {
+        "name": "Moela ao molho",
+        "price": 9.90
+    },
+    {
+        "name": "linguiça mista",
+        "price": 3.50
+    },
+    {
+        "name": "Linguiça apimentada",
+        "price": 4.90
+    },
+    {
+        "name": "Coração de frango",
+        "price": 7.90
+    },
+    {
+        "name": "Queijo coalho",
+        "price": 6.90
+    },
+    {
+        "name": "Suino",
+        "price": 9.90
+    },
+    {
+        "name": "Frango (tulipa)",
+        "price": 8.90
+    },
+    {
+        "name": "Queijo coalho com melaço",
+        "price": 8.90
+    },
+    {
+        "name": "Maminha",
+        "price": 13.90
+    },
+    {
+        "name": "Medalhao de frango",
+        "price": 12.90
+    },
+    {
+        "name": "Costelinha suina AL",
+        "price": 48.90
+    }, 
+    {
+        "name": "Carne de sol AL",
+        "price": 49.90
+    }, 
+    {
+        "name": "Chorizo prime AL",
+        "price": 53.90
+    }, 
+    {
+        "name": "Maminha importada AL",
+        "price": 53.90
+    }, 
+    {
+        "name": "Picanha australiana AL",
+        "price": 84.90
+    }, 
+    {
+        "name": "Arroz branco P",
+        "price": 5.90
+    },
+    {
+        "name": "Arroz branco G",
+        "price": 9.80
+    },
+    {
+        "name": "Baião tradicional P",
+        "price": 6.90
+    }, 
+    {
+        "name": "Baião tradicional G",
+        "price": 10.90
+    }, 
+    {
+        "name": "Arroz de leite P",
+        "price": 6.90
+    }, 
+    {
+        "name": "Arroz de leite G",
+        "price": 12.90
+    }, 
+    {
+        "name": "Baião cremoso P",
+        "price": 6.90
+    }, 
+    {
+        "name": "Baião cremoso G",
+        "price": 12.90
+    }, 
+    {
+        "name": "Arroz a grega P",
+        "price": 7.90
+    }, 
+    {
+        "name": "Arroz a grega G",
+        "price": 13.90
+    }, 
+    {
+        "name": "Feijão verde cremoso",
+        "price": 18.90
+    }, 
+    {
+        "name": "Costelinha de porco 100G",
+        "price": 6.90
+    }, 
+    {
+        "name": "Chorizo Prime 100G",
+        "price": 9.90
+    }, 
+    {
+        "name": "Maminha importada 100G",
+        "price": 9.90
+    }, 
+    {
+        "name": "Picanha australiana 100G",
+        "price": 15.50
+    },
+    {
+        "name": "Copo Acerola",
+        "price": 5.90
+    }, 
+    {
+        "name": "Copo Goiaba",
+        "price": 5.90
+    }, 
+    {
+        "name": "Copo Manga",
+        "price": 5.90
+    }, 
+    {
+        "name": "Copo Cajá",
+        "price": 6.90
+    }, 
+    {
+        "name": "Copo Graviola",
+        "price": 6.90
+    }, 
+    {
+        "name": "Copo Maracujá",
+        "price": 7.90
+    }, 
+    {
+        "name": "Jarra Polpa",
+        "price": 15.90
+    },
+    {
+        "name": "Copo Limonada",
+        "price": 7.90
+    },
+    {
+        "name": "Copo Abacaxi",
+        "price": 7.90
+    },
+    {
+        "name": "Copo Laranja",
+        "price": 7.90
+    },
+    {
+        "name": "Jarra Natural",
+        "price": 17.90
+    },
+    {
+        "name": "Monster",
+        "price": 11.90
+    },
+    {
+        "name": "RedBull",
+        "price": 11.90
+    },
+    {
+        "name": "Coca cola 600ML",
+        "price": 6.90
+    },
+    {
+        "name": "Cajuina 600ML",
+        "price": 6.90
+    },
+    {
+        "name": "Coca zero 1L",
+        "price": 8.90
+    },
+    {
+        "name": "Guaraná 1L",
+        "price": 8.90
+    },
+    {
+        "name": "Fanta Laranja 1L",
+        "price": 8.90
+    },
+    {
+        "name": "Cajuina 1L",
+        "price": 8.90
+    },
+    {
+        "name": "Coca cola KS",
+        "price": 3.90
+    },
+    {
+        "name": "Cajuina",
+        "price": 4.90
+    },
+    {
+        "name": "Cajuina lata",
+        "price": 4.90
+    },
+    {
+        "name": "Coca  Cola lata",
+        "price": 4.90
+    },
+    {
+        "name": "Coca cola zero lata",
+        "price": 4.90
+    },
+    {
+        "name": "Guaraná lata",
+        "price": 4.90
+    },
+    {
+        "name": "Guaraná zero lata",
+        "price": 4.90
+    },
+    {
+        "name": "Fanta laranja lata",
+        "price": 4.90
+    },
+    {
+        "name": "Fanta uva lata",
+        "price": 4.90
+    },
+    {
+        "name": "Schwepps Lata",
+        "price": 4.90
+    },
+    {
+        "name": "Sprite Lata",
+        "price": 4.90
+    },
+    {
+        "name": "Água s/ gás",
+        "price": 2.50
+    },
+    {
+        "name": "Água c/ gás",
+        "price": 2.90
+    },
+    {
+        "name": "Coco verde",
+        "price": 9.90
+    },
+    {
+        "name": "Água tônica",
+        "price": 4.90
+    },
+    {
+        "name": "H2O limão",
+        "price": 5.90
+    },
+    {
+        "name": "H2O limoneto",
+        "price": 5.90
+    },
+    {
+        "name": "Skol 600ML",
+        "price": 9.50
+    },
+    {
+        "name": "Bohemia 600ML",
+        "price": 9.50
+    },
+    {
+        "name": "Amstel 600ML",
+        "price": 9.90
+    },
+    {
+        "name": "Brahma duplo malte 600ML",
+        "price": 9.90
+    },
+    {
+        "name": "Budweiser 600ML",
+        "price": 10.50
+    },
+    {
+        "name": "Spaten 600ML",
+        "price": 10.90
+    },
+    {
+        "name": "Stella 600ML",
+        "price": 11.90
+    },
+    {
+        "name": "Antártica original 600ML",
+        "price": 11.90
+    },
+    {
+        "name": "Heineken 600ML",
+        "price": 14.50
+    },
+    {
+        "name": "Brahma duplo malte long neck",
+        "price": 6.50
+    },
+    {
+        "name": "Budweiser long neck",
+        "price": 7.90
+    },
+    {
+        "name": "Budweiser zero álcool long neck",
+        "price": 8.50
+    },
+    {
+        "name": "Stella long neck",
+        "price": 8.50
+    },
+    {
+        "name": "Spaten long neck",
+        "price": 8.50
+    },
+    {
+        "name": "Corona long neck",
+        "price": 9.50
+    },
+    {
+        "name": "Heineken long neck",
+        "price": 9.90
+    },
+    {
+        "name": "Cabaré ice long neck",
+        "price": 9.90
+    },
+    {
+        "name": "skol beats senses long neck",
+        "price": 10.90
+    },
+    {
+        "name": "Smirnoff ice long neck",
+        "price": 11.90
+    },
+    {
+        "name": "Conhaque droher dose",
+        "price": 4.50
+    },
+    {
+        "name": "Vodka orloff dose",
+        "price": 6.50
+    },
+    {
+        "name": "Vodka smirnoff dose",
+        "price": 7.50
+    },
+    {
+        "name": "Black white dose",
+        "price": 7.90
+    },
+    {
+        "name": "Red label dose",
+        "price": 10.90
+    },
+    {
+        "name": "Ballantines dose",
+        "price": 10.90
+    },
+    {
+        "name": "Cavalo branco dose",
+        "price": 10.90
+    },
+    {
+        "name": "Old parr dose",
+        "price": 14.90
+    },
+    {
+        "name": "Chivas regal dose",
+        "price": 15.90
+    },
+    {
+        "name": "Black label dose",
+        "price": 18.90
+    },
+    {
+        "name": "Campari dose",
+        "price": 8.90
+    },
+    {
+        "name": "Martini bianco e vermouth",
+        "price": 6.90
+    },
+    {
+        "name": "Ypioca ouro dose",
+        "price": 4.50
+    },
+    {
+        "name": "Ypioca ouro terça",
+        "price": 7.90
+    },
+    {
+        "name": "Ypioca ouro Burrinho",
+        "price": 9.90
+    },
+    {
+        "name": "Ypioca mestre dose",
+        "price": 4.50
+    },
+    {
+        "name": "Ypioca mestre terça",
+        "price": 7.90
+    },
+    {
+        "name": "Ypioca mestre burrinho",
+        "price": 7.90
+    },
+    {
+        "name": "51 ouro dose",
+        "price": 4.50
+    },
+    {
+        "name": "51 ouro terça",
+        "price": 7.90
+    },
+    {
+        "name": "51 ouro burrinho",
+        "price": 9.90
+    },
+    {
+        "name": "51 seleção dose",
+        "price": 4.50
+    },
+    {
+        "name": "51 seleção terça",
+        "price": 8.50
+    },
+    {
+        "name": "51 seleção burrinho",
+        "price": 9.50
+    },
+    {
+        "name": "Ypioca 150 anos dose",
+        "price": 7.90
+    },
+    {
+        "name": "Ypioca 150 anos terça",
+        "price": 17.90
+    },
+    {
+        "name": "Ypioca 150 anos burrinho",
+        "price": 19.90
+    },
+    {
+        "name":"Cachaça salina dose",
+        "price": 7.90
+    },
+    {
+        "name":"Cachaça salina terça",
+        "price": 12.90
+    },
+    {
+        "name":"Cachaça matuta dose",
+        "price": 5.90
+    },
+    {
+        "name":"Cachaça matuta terça",
+        "price": 11.90
+    },
+    {
+        "name":"Cachaça matuta burrinho",
+        "price": 13.90
+    },
+    {
+        "name":"Caipirinha",
+        "price": 8.90
+    },
+    {
+        "name":"Caipiroska",
+        "price": 11.90
+    },
+    {
+        "name":"Caipifruta",
+        "price": 13.90
+    },
+    {
+        "name":"Pina colada",
+        "price": 15.90
+    },
+    {
+        "name":"Espanhola",
+        "price": 18.90
+    },
+    {
+        "name":"Gin tônica",
+        "price": 19.90
+    },
+    {
+        "name":"Gin citrus",
+        "price": 21.90
+    },
+    {
+        "name":"Gin fruta",
+        "price": 22.90
+    },
+    {
+        "name":"Smirnoff ice cream",
+        "price": 21.90
+    },
+    {
+        "name":"Negroni",
+        "price": 24.90
+    },
+    {
+        "name":"Torre Skol 2,5L",
+        "price": 29.90
+    },
+    {
+        "name":"Torre Brahma duplo malte 2,5L",
+        "price": 34.90
+    },
+    {
+        "name":"Torre Budweiser 2,5L",
+        "price": 34.90
+    }
+]
