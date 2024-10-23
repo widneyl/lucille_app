@@ -22,7 +22,7 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, Keyboa
 import Logo from '../components/logo/Logo';
 import ProfileImage from '../img/profileIconEdit.png'
 import IconMoney from '../img/money.png'
-import IconFood from '../img/food.png'
+import AntDesign from '@expo/vector-icons/AntDesign';
 import Clock from '../img/clock.png'
 import useDatabaseConfig from '../database/useDatabaseConfig';
 import ValeCard from '../components/valeCard';
@@ -31,7 +31,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 
-export default function ViewAndEdit( { route } ) {
+export default function ViewAndEdit({ route }) {
 
     // guardando o id do funcionario que foi passado pelo parametro
     const funcionarioId = route.params.funcId;
@@ -51,28 +51,28 @@ export default function ViewAndEdit( { route } ) {
     // logo ao entrar na tela o useEffect vai setar o nome do funcionário
     useEffect(() => {
         db.findById_WithDB(funcionarioId).then((f) => {
-    
-          setNomeDoFuncionario(f.nome);
-          // validação para campo de vales vazio na tabela do bd
-          if (f.vales != null) {
-            setVales(JSON.parse(f.vales));
-          }
+
+            setNomeDoFuncionario(f.nome);
+            // validação para campo de vales vazio na tabela do bd
+            if (f.vales != null) {
+                setVales(JSON.parse(f.vales));
+            }
         })
-        .catch(err => console.log('deu erro aqui no atualizafunc: ' + err))
-    },[])
+            .catch(err => console.log('deu erro aqui no atualizafunc: ' + err))
+    }, [])
 
     // o useFocusEffect vai fazer acontecer o reload dos vales adicionados depois de adicinados na tela de produtos, ao entrar em foco ele vai buscar os vales do funcionario do bd
     useFocusEffect(
         useCallback(() => {
             console.log('to aqui no componente vale');
             db.findById_WithDB(funcionarioId).then((f) => {
-    
+
                 // validação para campo de vales vazio na tabela do bd
                 if (f.vales != null) {
-                  setVales(JSON.parse(f.vales));
+                    setVales(JSON.parse(f.vales));
                 }
-              })
-            .catch(err => console.log('deu erro aqui no atualizafunc: ' + err))
+            })
+                .catch(err => console.log('deu erro aqui no atualizafunc: ' + err))
         }, [])
     );
 
@@ -84,15 +84,15 @@ export default function ViewAndEdit( { route } ) {
     //     }
 
     //     // console.log(vale)
-    
+
     //     let arrayVale = vales;
     //     arrayVale.push(vale);
     //     setVales(arrayVale);
-    
+
     //     // console.log(vales);
-    
+
     //     let valesStr = JSON.stringify(vales);
-    
+
     //     db.updateVale(funcionarioId, valesStr);
     // }
 
@@ -103,7 +103,7 @@ export default function ViewAndEdit( { route } ) {
                 behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
                 keyboardVerticalOffset={80}
             >
-                <ScrollView style={styles.scrollForm} >
+                <ScrollView >
 
                     <View>
                         <Logo />
@@ -115,224 +115,161 @@ export default function ViewAndEdit( { route } ) {
                             source={ProfileImage}
                             style={{ width: 90, height: 90 }}
                         />
-                        <View style={styles.boxProfileOptions}>
+                        <View style={styles.boxHeaderProfileOptions}>
 
                             {/*Aqui é necessaario que seja exibido o nome do funcionario referente ao card*/}
                             {/* >> 18/10/2024 sofia: já está exibindo */}
-                            <Text style={styles.textNameProfile}>{nomeDoFuncionario}</Text>
+                            <Text style={styles.textHeaderNameProfile}>{nomeDoFuncionario}</Text>
 
                             {/* Botão que leva para a tela de perfil do funcionario.
                                 Aqui vai precisar de uma rota, talvez uma stack mesmo ja vai ser o suficiente.  
                             */}
-                            <TouchableOpacity style={styles.bottonProfile}>
+                            <TouchableOpacity style={styles.bottonHeaderProfile}
+
+                                onPress={() => {
+                                    // adicionarNovoVale();
+
+                                    // navegando para a tela de listagem de produtos, aqui passo por parametro o id e os vales do funcionário em questão
+                                    navigator.navigate('ProfileFunc', {
+                                        funcId: funcionarioId,
+                                        vale: vales
+                                    })
+                                }}
+                            >
                                 <Text style={{ color: 'white', fontSize: 12 }}>Vizualizar perfil</Text>
                             </TouchableOpacity>
                         </View>
 
                     </View>
 
-                    <View style={styles.boxHeaderCategory}>
-                        <Text style={{ fontSize: 23, paddingTop: 10, paddingBottom: 10, fontWeight: '500' }}>Adicionar vale</Text>
-                        <TouchableOpacity>
-                            <Image
-                                source={Clock}
-                                style={{
-                                    width: 22,
-                                    height: 22,
-                                    alignSelf: 'center',
-                                    justifyContent: 'flex-end'
-                                }}
-                            ></Image>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={{ padding: 10 }}>
-
-                        {/*So lembrando que o vale pode ser em dinheiro OU em produto!*/}
-
-                        <View style={styles.boxInput}>
-                            <View>
-                                <View style={styles.form}>
-                                    <Text style={styles.textInput}>Dinheiro R$:</Text>
-                                    <View style={{ width: '60%' }}>
-                                        <TextInput
-                                            style={styles.input}
-                                            placeholder='50'
-                                            keyboardType='numeric'
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <Image
-                                style={styles.imageIcon}
-                                source={IconMoney}
-                            />
+                    <View style={styles.boxAddVale}>
+                        <View style={styles.boxHeaderCategory}>
+                            <Text style={{ fontSize: 23, paddingTop: 10, paddingBottom: 10, fontWeight: '500' }}>Adicionar vale</Text>
+                            <TouchableOpacity>
+                                <Image
+                                    source={Clock}
+                                    style={{
+                                        width: 22,
+                                        height: 22,
+                                        alignSelf: 'center',
+                                        justifyContent: 'flex-end'
+                                    }}
+                                ></Image>
+                            </TouchableOpacity>
                         </View>
-
-
-                        <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 20 }} />
-
-                        {/* Essa parte aqui vai ser temporaria, uma vez que vamos ter que criar uma tela de seleção de produto, por enquanto vai ter
-                            que escrever o nome dor produto e o preço msm */}
-                        <View style={styles.boxInput}>
-                            <View>
-                                <View style={styles.form}>
-                                    <Text style={styles.textInput}>Produto:</Text>
-                                    <View style={{ width: '70%' }}>
-                                        <TextInput
-                                            style={styles.input}
-                                            placeholder='Coca-Cola Lata'
-                                            
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <Image
-                                style={styles.imageIcon}
-                                source={IconFood}
-                            />
-                        </View>
-
-                        <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 20 }} />
-
-                        <View style={styles.boxInput}>
-                            <View>
-                                <View style={styles.form}>
-                                    <Text style={styles.textInput}>Valor:</Text>
-                                    <View style={{ width: '70%' }}>
-                                        <TextInput
-                                            style={styles.input}
-                                            placeholder='20'
-                                         
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <Image
-                                style={styles.imageIcon}
-                                source={IconFood}
-                            />
-                        </View>
-
-                        {/*Essa area de selecionar a quantidade vamos ver depois se vai ficar ou não */}
-                        <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 20 }} />
-
-                        <View style={styles.boxInput}>
-                            <View style={styles.form}>
-                                <View style={styles.inputsBottom}>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={styles.textInput}>Quantidade:</Text>
-                                        <View style={{ width: '27%' }}>
+                        <View style={{ padding: 10 }}>
+                            {/*So lembrando que o vale pode ser em dinheiro OU em produto!*/}
+                            <View style={styles.boxInput}>
+                                <View>
+                                    <View style={styles.form}>
+                                        <Text style={styles.textInput}>Dinheiro R$:</Text>
+                                        <View style={{ width: '60%' }}>
                                             <TextInput
                                                 style={styles.input}
-                                                placeholder='1'
+                                                placeholder='50'
                                                 keyboardType='numeric'
                                             />
                                         </View>
                                     </View>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={styles.textInput}>Data:</Text>
-                                        <View>
+                                </View>
+                                <Image
+                                    style={styles.imageIcon}
+                                    source={IconMoney}
+                                />
+                            </View>
+                            <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 20 }} />
+                            {/* Essa parte aqui vai ser temporaria, uma vez que vamos ter que criar uma tela de seleção de produto, por enquanto vai ter
+                                que escrever o nome dor produto e o preço msm */}
+                            <TouchableOpacity style={styles.bottonViewProducts}
+                                onPress={() => {
+                                    // adicionarNovoVale();
+                                    // navegando para a tela de listagem de produtos, aqui passo por parametro o id e os vales do funcionário em questão
+                                    navigator.navigate('ViewProducts', {
+                                        funcId: funcionarioId,
+                                        vale: vales
+                                    })
+                                }}
+                            >
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ color: 'white', fontSize: 16 }}>Selecionar produtos  </Text>
+                                    <AntDesign name="plus" size={23} color="white" />
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        {
+                            // caso o campo de vales esteja vazio no funcionário, deve exibir somente uma mensagem, caso contrário exibir os componentes do card
+                            (vales.length == 0)
+                                ?
+                                <Text>Sem vales</Text>
+                                :
+                                vales.map((v) => (
+                                    <ValeCard key={v.id} descricao={v.descricao} preco={v.preco} />
+                                ))
+                        }
+                        <TouchableOpacity style={styles.bottonAdd}
+                            onPress={() => {
+                                //adicionarNovoVale();
+                                // navegando para a tela de listagem de produtos, aqui passo por parametro o id e os vales do funcionário em questão
+                                // navigator.navigate('ViewProducts', {
+                                //     funcId: funcionarioId,
+                                //     vale: vales
+                                // })
+                            }}
+                        >
+                            <Text style={{ color: 'white', fontSize: 16 }}>Adicionar</Text>
+                        </TouchableOpacity>
+                        {/*
+                            Nessa parte aqui do pagamento vamos ter alguns detalhes >>>
+                            Vamos exibir o valor da quinzena ja calculado tudo certinho.
+                            Porem, vamos deixar esse valor editavel.
+                            Valor R$: quinz - vales
+                            Ex:
+                            Quinzena: 550
+                            Total em vales: 100
+                        
+                            Vai ser exibido:    Valor R$: 450
+                        
+                        */}
+                        <View style={styles.boxHeaderCategory}>
+                            <Text style={{ fontSize: 23, paddingTop: 20, paddingBottom: 10, fontWeight: '500' }}>Adicionar Pagamento</Text>
+                            <TouchableOpacity>
+                                <Image
+                                    source={Clock}
+                                    style={{
+                                        width: 22,
+                                        height: 22,
+                                        alignSelf: 'center',
+                                        justifyContent: 'flex-end'
+                                    }}
+                                ></Image>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ padding: 10 }}>
+                            <View style={styles.boxInput}>
+                                <View>
+                                    <View style={styles.form}>
+                                        <Text style={styles.textInput}>Valor R$:</Text>
+                                        <View style={{ width: '70%' }}>
                                             <TextInput
                                                 style={styles.input}
-                                                placeholder='15/10/2024'
-                                                keyboardType='numbers-and-punctuation'
+                                                placeholder='quinz - vales'
+                                                keyboardType='numeric'
                                             />
                                         </View>
                                     </View>
                                 </View>
+                                <Image
+                                    style={styles.imageIcon}
+                                    source={IconMoney}
+                                />
                             </View>
+                            <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 20 }} />
                         </View>
-
-
-                        <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 20 }} />
-
-                    </View>
-
-                    {
-                        // caso o campo de vales esteja vazio no funcionário, deve exibir somente uma mensagem, caso contrário exibir os componentes do card
-                        (vales.length == 0) 
-                        ?
-                        <Text>Sem vales</Text>
-                        :
-                        vales.map((v) => (
-                            <ValeCard key={v.id} descricao={v.descricao} preco={v.preco}/>
-                        ))
-                    }
-
-                    <TouchableOpacity style={styles.bottonAdd}
-                        onPress={() => {
-                            // adicionarNovoVale();
-
-                            // navegando para a tela de listagem de produtos, aqui passo por parametro o id e os vales do funcionário em questão
-                            navigator.navigate('ViewProducts', { 
-                                funcId: funcionarioId,
-                                vale: vales 
-                            })
-                        }}
-                    >
-                        <Text style={{ color: 'white', fontSize: 16 }}>Adicionar</Text>
-                    </TouchableOpacity>
-
-
-
-                    {/* 
-                        Nessa parte aqui do pagamento vamos ter alguns detalhes >>>
-                        Vamos exibir o valor da quinzena ja calculado tudo certinho.
-                        Porem, vamos deixar esse valor editavel.
-
-                        Valor R$: quinz - vales
-
-                        Ex:
-                        Quinzena: 550
-                        Total em vales: 100
-                        
-                        Vai ser exibido:    Valor R$: 450
-                    
-                    */}
-                    <View style={styles.boxHeaderCategory}>
-                        <Text style={{ fontSize: 23, paddingTop: 20, paddingBottom: 10, fontWeight: '500' }}>Adicionar Pagamento</Text>
-                        <TouchableOpacity>
-                            <Image
-                                source={Clock}
-                                style={{
-                                    width: 22,
-                                    height: 22,
-                                    alignSelf: 'center',
-                                    justifyContent: 'flex-end'
-                                }}
-                            ></Image>
-                        </TouchableOpacity>
-
-                    </View>
-
-                    <View style={{ padding: 10 }}>
-                        <View style={styles.boxInput}>
-                            <View>
-                                <View style={styles.form}>
-                                    <Text style={styles.textInput}>Valor R$:</Text>
-                                    <View style={{ width: '70%' }}>
-                                        <TextInput
-                                            style={styles.input}
-                                            placeholder='quinz - vales'
-                                            keyboardType='numeric'
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <Image
-                                style={styles.imageIcon}
-                                source={IconMoney}
-                            />
+                        <View style={{ paddingBottom: 30 }}>
+                            <TouchableOpacity style={styles.bottonAdd}>
+                                <Text style={{ color: 'white', fontSize: 16 }}>Adicionar</Text>
+                            </TouchableOpacity>
                         </View>
-                        <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 20 }} />
-                    </View>
-
-
-                    <View style={{ paddingBottom: 30 }}>
-                        <TouchableOpacity style={styles.bottonAdd}>
-                            <Text style={{ color: 'white', fontSize: 16 }}>Adicionar</Text>
-                        </TouchableOpacity>
                     </View>
 
                 </ScrollView>
@@ -346,16 +283,16 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         paddingLeft: 23,
-        paddingRight: 23
+        paddingRight: 23,
     },
     boxHeader: {
         flexDirection: 'row',
-        padding: 10,
-        paddingLeft: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
         alignItems: 'center',
 
     },
-    boxProfileOptions: {
+    boxHeaderProfileOptions: {
         flexDirection: 'column',
         padding: 10,
         paddingLeft: 15,
@@ -363,21 +300,21 @@ const styles = StyleSheet.create({
 
         width: '100%'
     },
-    textNameProfile: {
+    textHeaderNameProfile: {
         color: '#5ea629',
         fontSize: 20,
         fontWeight: '500'
     },
-    bottonProfile: {
+    bottonHeaderProfile: {
         backgroundColor: '#5ea629',
         borderRadius: 5,
         alignItems: 'center',
         padding: 6,
         width: '36%'
-    },
+    }, 
     boxHeaderCategory: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     boxInput: {
         flexDirection: 'row',
@@ -388,12 +325,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
 
     },
-    textInput: {
-        fontSize: 18,
-        paddingTop: 2,
-        color: 'black',
-        fontWeight: '500'
-    },
     input: {
         fontSize: 16,
         borderWidth: 0,
@@ -401,16 +332,16 @@ const styles = StyleSheet.create({
 
 
     },
+    textInput: {
+        fontSize: 18,
+        paddingTop: 2,
+        color: 'black',
+        fontWeight: '500'
+    },
     imageIcon: {
         width: 22,
         height: 22,
         marginTop: 2,
-
-    },
-    inputsBottom: {
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
 
     },
     bottonAdd: {
@@ -418,10 +349,19 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         padding: 10,
-        width: '40%',
+        width: '50%',
         alignSelf: 'center',
         marginTop: 8,
 
+    },
+    bottonViewProducts: {
+        backgroundColor: '#011126',
+        borderRadius: 5,
+        alignItems: 'center',
+        padding: 10,
+        width: '70%',
+        alignSelf: 'center',
+        marginTop: 8,
     }
 
 });
