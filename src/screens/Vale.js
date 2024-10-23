@@ -182,7 +182,7 @@ export default function ViewAndEdit( { route } ) {
                                         <TextInput
                                             style={styles.input}
                                             placeholder='Coca-Cola Lata'
-                                            onChangeText={setProduto}
+                                            
                                         />
                                     </View>
                                 </View>
@@ -203,7 +203,7 @@ export default function ViewAndEdit( { route } ) {
                                         <TextInput
                                             style={styles.input}
                                             placeholder='20'
-                                            onChangeText={setValor}
+                                         
                                         />
                                     </View>
                                 </View>
