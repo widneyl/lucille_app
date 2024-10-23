@@ -120,6 +120,11 @@ export default function AllRoutes() {
                 name="ViewProducts"
                 component={ViewProducts}
             />
+
+            <Stack.Screen
+                name="ProfileFunc"
+                component={ProfileFunc}
+            />
         </Stack.Navigator>
     );
 }

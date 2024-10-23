@@ -214,7 +214,6 @@ const styles = StyleSheet.create({
 
     },
     boxHeader: {
-        marginTop: 50,
         height: '10%',
         flexDirection: 'row',
         justifyContent: 'space-between',
