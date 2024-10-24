@@ -29,26 +29,28 @@ export default function ProductCard( { produtoId, descricao, preco, onSelect } )
 
 const styles = StyleSheet.create({
     item: {
-        backgroundColor: 'green',
-        padding: 20,
+        borderRadius: 5,
+        backgroundColor: '#5ea629',
+        padding: 10,
         marginVertical: 2,
         display: 'flex',
         flexDirection: 'row'
     },
     selectedItem: {
-        backgroundColor: 'darkgreen',
-        padding: 20,
+        borderRadius: 5,
+        backgroundColor: '#2565E6',
+        padding: 10,
         marginVertical: 2,
         display: 'flex',
         flexDirection: 'row'
     },
     title: {
         flex: 1,
-        fontSize: 18,
+        fontSize: 22,
         color: 'white'
     },
     preco: {
-        fontSize: 18,
+        fontSize: 22,
         color: 'white'
     }
 });

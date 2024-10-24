@@ -117,7 +117,7 @@ export default function AllRoutes() {
 
             {/* tela temporaria para ver produtos e testar lógicas */}
             <Stack.Screen
-                name="ViewProducts"
+                name="Produtos"
                 component={ViewProducts}
             />
 
