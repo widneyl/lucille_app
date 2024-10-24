@@ -33,13 +33,14 @@ import calendar from '../img/calendar.png'
 import { useEffect, useState } from 'react';
 import useDatabaseConfig from '../database/useDatabaseConfig';
 import { useNavigation } from '@react-navigation/native';
-
+import Entypo from '@expo/vector-icons/Entypo';
 
 
 export default function ProfileFunc( { route } ) {
     
     // parametros passados no navigate
     const funcionarioId = route.params.funcId;
+    const vales = route.params.vale;
 
     // para navegações
     const navigator = useNavigation();
@@ -54,6 +55,7 @@ export default function ProfileFunc( { route } ) {
     const [dataDeAdmissao, setDataDeAdmissao] = useState('')
     const [cargo, setCargo] = useState('')
     const [salario, setSalario] = useState(0)
+    const [quinzena, setQuinzena] = useState(0)
 
     // useEffect para recuperar os dados do funcionário assim que o componente for renderizado
     useEffect(() => {
@@ -73,18 +75,15 @@ export default function ProfileFunc( { route } ) {
 
     }, [])
 
-    // componente de alert para confirmação de demissão
-    const createTwoButtonAlert = () =>
-        Alert.alert('Alert Title', 'My Alert Msg', [
-        {
-            text: 'Cancel',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-        },
-        {
-            text: 'OK', onPress: () => console.log('OK Pressed')
-        },
-    ]);
+    const calcularQuinzena = () => {
+
+        let totVales = 0;
+        vales.forEach(v => {
+            totVales += v.preco;
+        });
+
+        setQuinzena(salario - totVales);
+    }
 
     return (
         <View style={styles.container}>
@@ -224,19 +223,24 @@ export default function ProfileFunc( { route } ) {
                                 onChangeText={setSalario}
                             />
                         </View>
-                        <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 15 }} />
-                        <View>
-                            <View style={styles.form}>
-                                <Text style={styles.text}>Quinzena:</Text>
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder='Quinzena ainda não calculada'
-                                    keyboardType='numeric'
-                                    // ainda vou implementar uma forma de exibir a quinzena
-                                    value=''
-                                />
-                            </View>
+                    </View>
+                    <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 15 }} />
+
+                    <View style={styles.boxInput}>
+                        <View style={styles.form}>
+                            <Text style={styles.text}>Quinzena:</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder='Clique para calcular'
+                                placeholderTextColor={'green'}
+                                keyboardType='numeric'
+                                readOnly={true}
+                                value={(quinzena == 0) ? '':quinzena.toString()}
+                            />
                         </View>
+                        <TouchableOpacity style={styles.imageIcon} onPress={calcularQuinzena}>
+                            <Entypo name="calculator" size={24} color="green" />
+                        </TouchableOpacity>
                     </View>
                     <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 15 }} />
 
