@@ -75,14 +75,15 @@ function TabRoutes() {
             
 
             {/*Fiz essa rota apenas para exibir a tela de perfil do funcionario, quando estiver emplementada por favor apagar essa rota*/}
-            <Tab.Screen
+            {/* >> sofia: rota não é mais necessária no tab, por isso comentei */}
+            {/* <Tab.Screen
                 name="ProfileFunc"
                 component={ProfileFunc}
                 options={{
                     tabBarIcon: ({ size }) => <MaterialIcons name="edit-document" size={24} color="#45791E" />,
                     tabBarLabel: '',
                 }}
-            />
+            /> */}
 
             {/* criei essa rota pra visualizar a criação dos componentes, ela é uma cópia da home */}
             {/* <Tab.Screen
