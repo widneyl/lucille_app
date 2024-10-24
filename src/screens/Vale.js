@@ -48,6 +48,11 @@ export default function ViewAndEdit({ route }) {
     // instância para navegar para outras telas
     const navigator = useNavigation()
 
+    let coutProductSelected = vales.length;
+
+    function reloadcoutProductSelected(){
+        coutProductSelected = 0
+    }
     // logo ao entrar na tela o useEffect vai setar o nome do funcionário
     useEffect(() => {
         db.findById_WithDB(funcionarioId).then((f) => {
@@ -136,7 +141,7 @@ export default function ViewAndEdit({ route }) {
                                     })
                                 }}
                             >
-                                <Text style={{ color: 'white', fontSize: 12 }}>Vizualizar perfil</Text>
+                                <Text style={{ color: 'white', fontSize: 14 }}>Vizualizar perfil</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -144,7 +149,7 @@ export default function ViewAndEdit({ route }) {
 
                     <View style={styles.boxAddVale}>
                         <View style={styles.boxHeaderCategory}>
-                            <Text style={{ fontSize: 23, paddingTop: 10, paddingBottom: 10, fontWeight: '500' }}>Adicionar vale</Text>
+                            <Text style={{ fontSize: 24, paddingTop: 10, paddingBottom: 10, fontWeight: '500' }}>Adicionar vale</Text>
                             <TouchableOpacity>
                                 <Image
                                     source={Clock}
@@ -184,14 +189,14 @@ export default function ViewAndEdit({ route }) {
                                 onPress={() => {
                                     // adicionarNovoVale();
                                     // navegando para a tela de listagem de produtos, aqui passo por parametro o id e os vales do funcionário em questão
-                                    navigator.navigate('ViewProducts', {
+                                    navigator.navigate('Produtos', {
                                         funcId: funcionarioId,
                                         vale: vales
                                     })
                                 }}
                             >
                                 <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ color: 'white', fontSize: 16 }}>Selecionar produtos  </Text>
+                                    <Text style={{ color: 'white', fontSize: 18 }}>Selecionar produtos  </Text>
                                     <AntDesign name="plus" size={23} color="white" />
                                 </View>
                             </TouchableOpacity>
@@ -200,14 +205,17 @@ export default function ViewAndEdit({ route }) {
                             // caso o campo de vales esteja vazio no funcionário, deve exibir somente uma mensagem, caso contrário exibir os componentes do card
                             (vales.length == 0)
                                 ?
-                                <Text>Sem vales</Text>
+                                <Text style={{ paddingLeft: 10, fontSize: 18 }}>Nenhum produto adicionado</Text>
                                 :
-                                vales.map((v) => (
-                                    <ValeCard key={v.id} descricao={v.descricao} preco={v.preco} />
-                                ))
+                                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                    <View style={{backgroundColor: "#5ea629", marginLeft: 9, borderRadius: 5}}><Text style={{fontSize: 18, paddingLeft: 5, paddingRight: 5, color: 'white'}}>{coutProductSelected}</Text></View>
+                                    <Text style={{ fontSize: 18 }}>{(coutProductSelected > 1) ? <Text> Produtos adicinados</Text> : <Text>{coutProductSelected} Produto adicionado</Text>}</Text>
+                                </View>
+
                         }
                         <TouchableOpacity style={styles.bottonAdd}
                             onPress={() => {
+                                reloadcoutProductSelected();
                                 //adicionarNovoVale();
                                 // navegando para a tela de listagem de produtos, aqui passo por parametro o id e os vales do funcionário em questão
                                 // navigator.navigate('ViewProducts', {
@@ -216,7 +224,7 @@ export default function ViewAndEdit({ route }) {
                                 // })
                             }}
                         >
-                            <Text style={{ color: 'white', fontSize: 16 }}>Adicionar</Text>
+                            <Text style={{ color: 'white', fontSize: 18 }}>Adicionar Vale</Text>
                         </TouchableOpacity>
                         {/*
                             Nessa parte aqui do pagamento vamos ter alguns detalhes >>>
@@ -231,7 +239,7 @@ export default function ViewAndEdit({ route }) {
                         
                         */}
                         <View style={styles.boxHeaderCategory}>
-                            <Text style={{ fontSize: 23, paddingTop: 20, paddingBottom: 10, fontWeight: '500' }}>Adicionar Pagamento</Text>
+                            <Text style={{ fontSize: 24, paddingTop: 20, paddingBottom: 10, fontWeight: '500' }}>Adicionar Pagamento</Text>
                             <TouchableOpacity>
                                 <Image
                                     source={Clock}
@@ -267,7 +275,7 @@ export default function ViewAndEdit({ route }) {
                         </View>
                         <View style={{ paddingBottom: 30 }}>
                             <TouchableOpacity style={styles.bottonAdd}>
-                                <Text style={{ color: 'white', fontSize: 16 }}>Adicionar</Text>
+                                <Text style={{ color: 'white', fontSize: 18 }}>Adicionar Pagamento</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -302,7 +310,7 @@ const styles = StyleSheet.create({
     },
     textHeaderNameProfile: {
         color: '#5ea629',
-        fontSize: 20,
+        fontSize: 21,
         fontWeight: '500'
     },
     bottonHeaderProfile: {
@@ -311,7 +319,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 6,
         width: '36%'
-    }, 
+    },
     boxHeaderCategory: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -326,7 +334,7 @@ const styles = StyleSheet.create({
 
     },
     input: {
-        fontSize: 16,
+        fontSize: 18,
         borderWidth: 0,
         paddingLeft: 5,
 
@@ -349,7 +357,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         padding: 10,
-        width: '50%',
+        width: '60%',
         alignSelf: 'center',
         marginTop: 8,
 
@@ -359,7 +367,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         padding: 10,
-        width: '70%',
+        width: '100%',
         alignSelf: 'center',
         marginTop: 8,
     }

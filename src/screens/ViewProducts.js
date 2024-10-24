@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Button, FlatList, SafeAreaView, StyleSheet } from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import { Vale } from '../entity/Vale';
 
@@ -8,10 +8,11 @@ import * as SQLite from 'expo-sqlite';
 import useDatabaseConfig from '../database/useDatabaseConfig';
 import ProductCard from "../components/productCard";
 import SearchBar from "../components/searchBar";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 // criei essa tela pra exibir todos os produtos que foram armazenados no bd na tabela produtos
 // o design que fiz foi só pra ficar mais apresentável, deve passar por mudanças e ser adaptado ao do figma
-export default function ViewProducts( { route } ) {
+export default function ViewProducts({ route }) {
 
     // guardando o id e vales do funcionário que recebidos por parametros
     const funcionarioId = route.params.funcId;
@@ -36,10 +37,10 @@ export default function ViewProducts( { route } ) {
         // função para trazer todos os produtos do banco de dados e exibi-los
         async function getAllProducts() {
             const db = await SQLite.openDatabaseAsync(database.databaseOnUse);
-            
-            try {                
+
+            try {
                 const allRows = await db.getAllAsync('SELECT * FROM produtos');
-      
+
                 setProdutos([]);
                 let newArray = [];
                 for (const row of allRows) {
@@ -52,20 +53,20 @@ export default function ViewProducts( { route } ) {
             } finally {
                 db.closeAsync();
             }
-            
+
         }
 
         getAllProducts();
 
-    },[]);
+    }, []);
 
     // função para fazer a filtração dos produtos de acordo com a pesquisa no search
     // vou exportar essa função para o componente para ser usada dentro dele
     const pesquisarPorProduto = (pesquisa) => {
-      const filtrados = produtos.filter(item =>
-        item.descricao.toLowerCase().includes(pesquisa.toLowerCase())
-      );
-      setProdutosFiltrados(filtrados);
+        const filtrados = produtos.filter(item =>
+            item.descricao.toLowerCase().includes(pesquisa.toLowerCase())
+        );
+        setProdutosFiltrados(filtrados);
     };
 
     // mesmo esquema da função acima, exportei pra outro componente e ela vai sendo chamada conforme os produtos forem selecionados
@@ -85,7 +86,7 @@ export default function ViewProducts( { route } ) {
     const atualizarVale = () => {
         let arrayVale = vales.concat(produtosEscolhidos);
         // console.log(arrayVale)
-        
+
         let strVale = JSON.stringify(arrayVale);
 
         database.updateVale(funcionarioId, strVale);
@@ -96,29 +97,38 @@ export default function ViewProducts( { route } ) {
 
     return (
         <>
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 {/* area para fazer pesquisa de produto */}
                 <SearchBar pesquisarPor={pesquisarPorProduto} />
 
-                <FlatList
-                    data={produtosFiltrados}
-                    renderItem={
-                        ({item}) => (
-                            <ProductCard produtoId={item.id} descricao={item.descricao} preco={item.preco} onSelect={produtosSelecionados} />
-                        )
-                    }
-                    keyExtractor={item => item.id}
-                />
+                
+                    <View style={styles.listProduct}>
+                        <FlatList
+                            data={produtosFiltrados}
+                            renderItem={
+                                ({ item }) => (
+                                    <ProductCard produtoId={item.id} descricao={item.descricao} preco={item.preco} onSelect={produtosSelecionados} />
+                                )
+                            }
+                            keyExtractor={item => item.id}
+                            showsVerticalScrollIndicator={false}
+                        />
+                    </View>
 
-                <Button
-                    title="Adicionar"
-                    onPress={() => {
-                        console.log('produtos adicionados no vale:')
-                        // console.log(produtosEscolhidos);
-                        atualizarVale();
-                    }}
-                />
-            </SafeAreaView>
+
+                    <TouchableOpacity
+                        style={styles.Button}
+                        onPress={() => {
+                            console.log('produtos adicionados no vale:')
+                            // console.log(produtosEscolhidos);
+                            atualizarVale();
+                        }}
+
+                    >
+                        <Text style={styles.textButton}>Adicionar</Text>
+                    </TouchableOpacity>
+                
+            </View>
         </>
     );
 }
@@ -126,5 +136,27 @@ export default function ViewProducts( { route } ) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingLeft: 15,
+        paddingRight: 15,
+        backgroundColor: 'white'
     },
+    listProduct: {
+        height: '75%'
+    },
+    Button: {
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#011126',
+        width: '50%',
+        marginTop: 15,
+        borderRadius: 5,
+        padding: 6,
+        height: 50
+    },
+    textButton: {
+        color: 'white',
+        fontSize: 22,
+
+    }
 });

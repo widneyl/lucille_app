@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 
+import AntDesign from '@expo/vector-icons/AntDesign';
+
 // componente de barra de pesquisa para usar na visualização de produtos
 export default function SearchBar ({ pesquisarPor }) {
   const [pesquisa, setPesquisa] = useState('');
@@ -20,27 +22,29 @@ export default function SearchBar ({ pesquisarPor }) {
         value={pesquisa}
         onChangeText={pesquisarPorProduto}
       />
+      <AntDesign name="search1" size={24} color="black" />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    margin: 10,
-    padding: 5,
-    borderRadius: 10,
-    backgroundColor: '#f0f0f0',
+    marginTop: 10,
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center'
+   
+    
   },
   input: {
-    height: 40,
+    width: '90%',
     fontSize: 16,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    backgroundColor: '#fff',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
+    // paddingHorizontal: 10,
+    // borderRadius: 10,
+    borderBottomWidth: 1,
+    padding: 3,
+    marginBottom: 15
+    
+    
   },
 });
