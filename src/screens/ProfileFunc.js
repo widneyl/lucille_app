@@ -21,7 +21,7 @@
     */}
 
 
-import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 
 import Logo from '../components/logo/Logo';
 import ProfileImage from '../img/profileIconEdit.png'
@@ -30,11 +30,60 @@ import iconCpf from '../img/cpfIcon.png'
 import telIncon from '../img/telIcon.png'
 import gearIcon from '../img/gearIcon.png'
 import calendar from '../img/calendar.png'
+import { useEffect, useState } from 'react';
+import useDatabaseConfig from '../database/useDatabaseConfig';
+import { useNavigation } from '@react-navigation/native';
+import Entypo from '@expo/vector-icons/Entypo';
 
 
-
-export default function Register() {
+export default function ProfileFunc( { route } ) {
     
+    // parametros passados no navigate
+    const funcionarioId = route.params.funcId;
+    const vales = route.params.vale;
+
+    // para navegações
+    const navigator = useNavigation();
+
+    // instância para o banco de dados
+    const db = useDatabaseConfig();
+
+    // states para edição no funcionário
+    const [nome, setNome] = useState('')
+    const [cpf, setCpf] = useState(0)
+    const [telefone, setTelefone] = useState(0)
+    const [dataDeAdmissao, setDataDeAdmissao] = useState('')
+    const [cargo, setCargo] = useState('')
+    const [salario, setSalario] = useState(0)
+    const [quinzena, setQuinzena] = useState(0)
+
+    // useEffect para recuperar os dados do funcionário assim que o componente for renderizado
+    useEffect(() => {
+        db.findById_WithDB(funcionarioId).then((f) => {
+            // setando os states
+            setNome(f.nome);
+            setCpf(f.cpf);
+            setTelefone(f.telefone);
+            setDataDeAdmissao(f.dataDeAdmissao);
+            setCargo(f.cargo);
+            setSalario((f.salario).toString());
+
+        })
+        .catch((err) => {
+            console.log('ocorreu um erro ao tentar recuperar as informações para edição do funcionário: ' + err);
+        })
+
+    }, [])
+
+    const calcularQuinzena = () => {
+
+        let totVales = 0;
+        vales.forEach(v => {
+            totVales += v.preco;
+        });
+
+        setQuinzena(salario - totVales);
+    }
 
     return (
         <View style={styles.container}>
@@ -50,7 +99,8 @@ export default function Register() {
             </TouchableOpacity>
 
             <View style={styles.nameBox}>
-                <Text style={styles.textNameProfile}>Sofia Sales Lima</Text>
+                {/* setando o nome do funcionário */}
+                <Text style={styles.textNameProfile}>{ nome }</Text>
             </View>
 
             <KeyboardAvoidingView
@@ -65,8 +115,9 @@ export default function Register() {
                             <View style={{ width: '75%' }}>
                                 <TextInput
                                     style={styles.input}
-                                    placeholder=''
-                                    // onChangeText={setName}
+                                    placeholder='Sem nome cadastrado'
+                                    value={nome}
+                                    onChangeText={setNome}
                                 />
                             </View>
                         </View>
@@ -84,9 +135,10 @@ export default function Register() {
                             <View style={{ width: '80%' }}>
                                 <TextInput
                                     style={styles.input}
-                                    placeholder=''
+                                    placeholder='Sem CPF cadastrado'
                                     keyboardType='numeric'
-                                    // onChangeText={setCpf}
+                                    value={cpf}
+                                    onChangeText={setCpf}
                                 />
                             </View>
                         </View>
@@ -103,9 +155,10 @@ export default function Register() {
                             <View style={{ width: '70%' }}>
                                 <TextInput
                                     style={styles.input}
-                                    placeholder=''
+                                    placeholder='Sem telefone cadastrado'
                                     keyboardType='numeric'
-                                    // onChangeText={setTelefone}
+                                    value={telefone}
+                                    onChangeText={setTelefone}
                                 />
                             </View>
                         </View>
@@ -124,8 +177,10 @@ export default function Register() {
                                 <View style={{ width: '45%' }}>
                                     <TextInput
                                         style={styles.input}
-                                        placeholder=''
+                                        placeholder='Sem data de admissão cadastrada'
                                         keyboardType='numeric'
+                                        value={dataDeAdmissao}
+                                        onChangeText={setDataDeAdmissao}
                                     />
                                 </View>
                             </View>
@@ -144,8 +199,9 @@ export default function Register() {
                                 <View style={{ width: '75%' }}>
                                     <TextInput
                                         style={styles.input}
-                                        placeholder=''
-                                        // onChangeText={setCargo}
+                                        placeholder='Sem cargo cadastrado'
+                                        value={cargo}
+                                        onChangeText={setCargo}
                                     />
                                 </View>
                             </View>
@@ -162,30 +218,36 @@ export default function Register() {
                             <Text style={styles.text}>Salario R$:</Text>
                             <TextInput
                                 style={styles.input}
-                                placeholder=''
                                 keyboardType='numeric'
-                                // onChangeText={setSalario}
+                                value={salario}
+                                onChangeText={setSalario}
                             />
                         </View>
-                        <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 15 }} />
-                        <View>
-                            <View style={styles.form}>
-                                <Text style={styles.text}>Quinzena:</Text>
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder=''
-                                    keyboardType='numeric'
-                                />
-                            </View>
+                    </View>
+                    <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 15 }} />
+
+                    <View style={styles.boxInput}>
+                        <View style={styles.form}>
+                            <Text style={styles.text}>Quinzena:</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder='Clique para calcular'
+                                placeholderTextColor={'green'}
+                                keyboardType='numeric'
+                                readOnly={true}
+                                value={(quinzena == 0) ? '':quinzena.toString()}
+                            />
                         </View>
+                        <TouchableOpacity style={styles.imageIcon} onPress={calcularQuinzena}>
+                            <Entypo name="calculator" size={24} color="green" />
+                        </TouchableOpacity>
                     </View>
                     <View style={{ borderBottomColor: '#a6a6a6', borderBottomWidth: 1, marginBottom: 15 }} />
 
                     <View style={styles.boxBotao}>
                         <TouchableOpacity style={styles.botaoEditar}
                             onPress={() => {
-                                // database.create(name, cargo, salario, cpf, telefone);
-                                // navigation.navigate('Home');
+                                db.updateAllFields(funcionarioId, nome, cargo, Number(salario), cpf, telefone, dataDeAdmissao);
                             }}
                         >
                             <Text style={styles.textbotao}>Editar Perfil</Text>
@@ -193,8 +255,22 @@ export default function Register() {
 
                         <TouchableOpacity style={styles.botaoDemitir}
                             onPress={() => {
-                                // database.create(name, cargo, salario, cpf, telefone);
-                                // navigation.navigate('Home');
+                                // alerta para confirmação de demissão
+                                Alert.alert('Tem certeza que quer demitir?', 'Ao demitir, o funcionário será excluído totalmente do aplicativo.', [
+                                    {
+                                        text: 'Cancelar',
+                                        onPress: () => console.log('Cancel Pressed'),
+                                        style: 'cancel',
+                                    },
+                                    {
+                                        text: 'OK', onPress: () => {
+                                            db.removeById(funcionarioId);
+                                            navigator.navigate('Home')
+                                        }
+                                    },
+                                ])
+
+                                // db.removeById(funcionarioId);
                             }}
                         >
                             <Text style={styles.textbotao}>Demitir</Text>
